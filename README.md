@@ -131,13 +131,13 @@ const s1 = Singleton(option1);
 const s2 = Singleton({color: 'green'});
 const s3 = Singleton({color: 'blue'});
 
-s1 !== s2;
-s2 !== s3;
-s3 !== s1;
+s1 !== s2; // true
+s2 !== s3; // true
+s3 !== s1; // true
 
-s1 === Singleton(option1);
-s1 !== Singleton({color: 'red'});
-s1 !== Singleton({color: 'red', size: 'Huge'});
+s1 === Singleton(option1); // true
+s1 !== Singleton({color: 'red'}); // true
+s1 !== Singleton({color: 'red', size: 'Huge'}); // true
 ```
 
 ### 'literal' option
@@ -157,13 +157,13 @@ const s1 = Singleton(option1);
 const s2 = Singleton({color: 'green'});
 const s3 = Singleton({color: 'blue'});
 
-s1 !== s2;
-s2 !== s3;
-s3 !== s1;
+s1 !== s2; // true
+s2 !== s3; // true
+s3 !== s1; // true
 
-s1 === Singleton(option1);
-s1 === Singleton({color: 'red'});
-s1 !== Singleton({color: 'red', size: 'Huge'});
+s1 === Singleton(option1); // true
+s1 === Singleton({color: 'red'}); // true
+s1 !== Singleton({color: 'red', size: 'Huge'}); // true
 ```
 
 ### 'property' option
@@ -183,13 +183,13 @@ const s1 = Singleton(option1);
 const s2 = Singleton({color: 'green'});
 const s3 = Singleton({color: 'blue'});
 
-s1 !== s2;
-s2 !== s3;
-s3 !== s1;
+s1 !== s2; // true
+s2 !== s3; // true
+s3 !== s1; // true
 
-s1 === Singleton(option1);
-s1 === Singleton({color: 'red'});
-s1 === Singleton({color: 'red', size: 'Huge'});
+s1 === Singleton(option1); // true
+s1 === Singleton({color: 'red'}); // true
+s1 === Singleton({color: 'red', size: 'Huge'}); // true
 ```
 ## License
 
