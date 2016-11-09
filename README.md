@@ -5,7 +5,7 @@ Helps create and manage families of singletons based on customizable conditions
 
 Sometimes your functions handle data that match one-to-one to an object, but your don't have that object in the scope, and don't want to create a new one (especially if the object has states that could already have been mutated).
 
-SingletonFactory is the default for module 'singletons'. Given a constructor and a set of options hinting on what to expect, it returns a Singleton function that will always return the same object constructed once from the passed constructor and the same set of arguments (strict equality).
+SingletonFactory is provided by module 'singletons'. Given a constructor and a set of options hinting on what to expect, it returns a Singleton function that will always return the same object constructed once from the passed constructor and the same set of arguments (strict equality).
 
 ## SingletonFactory syntax
 
@@ -16,7 +16,7 @@ If you provide a function, it should take as arguments your indexes and return a
 In the latter case, options should hint on the nature of the expected indexing data. Keywords are 'object', 'literal' and 'property' used as in the following example:
 
 ```js
-import SingletonFactory from 'singletons';
+import {SingletonFactory} from 'singletons';
 
 class Class {constructor() {}}
 
@@ -43,7 +43,7 @@ The generated Singleton function has a property ```key``` that returns the
 generated key for any given set of arguments.
 
 ```js
-import SingletonFactory from 'singletons';
+import {SingletonFactory} from 'singletons';
 
 class Class {constructor() {}}
 
@@ -65,7 +65,7 @@ Singleton.key(new Class()) === '3'; // true
 The generated Singleton function has a property ```singleton``` that returns the singleton referenced by a specific key.
 
 ```js
-import SingletonFactory from 'singletons';
+import {SingletonFactory} from 'singletons';
 
 class Class {constructor() {}}
 
@@ -88,7 +88,7 @@ Singleton.singleton('1') === s1; // true
 * ```type```: Often unused, as the default is 'object', and any option having a property 'property' forces the type to be 'property'. But when you use the option 'stem' and want a 'literal' treatment, then you need it.
 
 ```js
-import SingletonFactory from 'singletons';
+import {SingletonFactory} from 'singletons';
 
 class Class {constructor() {}}
 
@@ -119,7 +119,7 @@ There are advantages and drawbacks pertaining to each option type. Choose with c
 Use this if you know your objects are persistent. When used on literals, you may end up with tons of singletons, a sign of a poor design. But this option allows for user-friendly (human-readable) keys, making accessing singletons easier.
 
 ```js
-import SingletonFactory from 'singletons';
+import {SingletonFactory} from 'singletons';
 
 class Class {constructor() {}}
 
@@ -145,7 +145,7 @@ s1 !== Singleton({color: 'red', size: 'Huge'}); // true
 Use this when literal equality is fine. This reduces the number of potential singletons, at the expense of key readability.
 
 ```js
-import SingletonFactory from 'singletons';
+import {SingletonFactory} from 'singletons';
 
 class Class {constructor() {}}
 
@@ -171,7 +171,7 @@ s1 !== Singleton({color: 'red', size: 'Huge'}); // true
 Use this when matching on a specific property. This even further reduces the number of generated singletons, but now you run the risk of matching pretty unrelated things.
 
 ```js
-import SingletonFactory from 'singletons';
+import {SingletonFactory} from 'singletons';
 
 class Class {constructor() {}}
 
