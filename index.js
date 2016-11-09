@@ -3,27 +3,44 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.SingletonFactory = undefined;
+
+var _keyfunc2 = require('keyfunc');
+
+var _keyfunc3 = _interopRequireDefault(_keyfunc2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 var SingletonFactory = exports.SingletonFactory = function SingletonFactory(Type) {
-  var keyFunc = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function (obj) {
+  var defaultKeyfunc = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function (obj) {
     return obj.toString();
   };
 
 
-  if (typeof keyFunc !== 'function') {
+  var keyfunc = defaultKeyfunc;
 
-    throw new TypeError('Initializing argument should be a function generating unique keys' + 'from arguments');
+  if (typeof keyfunc !== 'function') {
+
+    if (Array.isArray(keyfunc)) {
+
+      keyfunc = _keyfunc3.default.apply(undefined, _toConsumableArray(keyfunc));
+    } else {
+
+      throw new TypeError('Initializing argument should be a function generating unique keys ' + 'from arguments');
+    }
   }
 
-  var madeSingleton = function makeSingleton(_Type, _keyFunc) {
+  var madeSingleton = function makeSingleton(_Type, _keyfunc) {
 
     var instances = new Map();
-
-    return function Singleton() {
-      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
+    var Singleton = function Singleton() {
+      for (var _len = arguments.length, args = Array(_len), _key2 = 0; _key2 < _len; _key2++) {
+        args[_key2] = arguments[_key2];
       }
 
-      var key = _keyFunc.apply(undefined, args);
+      var key = _keyfunc.apply(undefined, args);
       var instance = instances.get(key);
 
       if (instance) {
@@ -36,7 +53,15 @@ var SingletonFactory = exports.SingletonFactory = function SingletonFactory(Type
 
       return instance;
     };
-  }(Type, keyFunc);
+
+    Singleton.key = keyfunc;
+    Singleton.singleton = function singleton(_key) {
+
+      return instances.get(_key);
+    };
+
+    return Singleton;
+  }(Type, keyfunc);
 
   return madeSingleton;
 };

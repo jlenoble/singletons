@@ -20,6 +20,8 @@
   "rules": {
     "arrow-parens": ["error", "as-needed"],
     "indent": ["error", 2],
+    "no-param-reassign": ["error", {"props": true}],
+    "one-var": ["error", "never"],
     "quotes": ["error", "single"]
   }
 }
