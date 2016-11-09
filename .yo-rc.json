@@ -1,0 +1,13 @@
+{
+  "generator-wupjs": {
+    "module": "singletons",
+    "description": "Helps create and manage families of singletons based on customizable conditions",
+    "author": "Jason Lenoble",
+    "email": "jason.lenoble@gmail.com",
+    "github": "jlenoble",
+    "license": "MIT",
+    "transpile": "es2015",
+    "addons": [],
+    "Class": "Singletons"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "plugins": [
+    //"import"
+  ],
+  "extends": [
+    "eslint:all"//,
+    //"plugin:import/errors",
+    //"plugin:import/warnings"
+  ],
+  "env": {
+    "es6": true
+  },
+  "rules": {
+    "arrow-parens": ["error", "as-needed"],
+    "indent": ["error", 2],
+    "quotes": ["error", "single"]
+  }
+}
