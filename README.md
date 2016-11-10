@@ -9,7 +9,7 @@ SingletonFactory is provided by module 'singletons'. Given a constructor and a s
 
 ## SingletonFactory syntax
 
-SingletonFactory takes two arguments. The first one specifies the constructor for the singletons, and the second one is a function or an array with respectively as many arguments or elements as you expect data to index your objects. For example if it matters to you that methods be considered different if they are not bound to the same object, then you will need two arguments: One indexing the object and one indexing the method.
+SingletonFactory takes two arguments. The first one specifies the constructor for the singletons, and the second one is a function or an array with at least as many arguments or elements as you expect data to index your objects. For example if it matters to you that methods be considered different if they are not bound to the same object, then you will need two arguments: One indexing the object and one indexing the method.
 
 If you provide a function, it should take as arguments your indexes and return a unique key as a string. But if you provide an array of options, a custom function will be generated for you using module [keyfunc](https://www.npmjs.com/package/keyfunc).
 
@@ -87,6 +87,8 @@ Singleton.singleton('1') === s1; // true
 
 * ```type```: Often unused, as the default is 'object', and any option having a property 'property' forces the type to be 'property'. But when you use the option 'stem' and want a 'literal' treatment, then you need it.
 
+* ```rest```: If omitted, the number of arguments of the generated Singleton function is exactly that passed to SingletonFactory; if true for one argument, then the corresponding key function  will be used for all arguments not hinted in SingletonFactory; If several rest options are defined, only the first one is taken into account.
+
 ```js
 import {SingletonFactory} from 'singletons';
 
@@ -98,7 +100,8 @@ const Singleton = SingletonFactory(Class, [
   },
   {
     stem: 'second',
-    type: 'literal'
+    type: 'literal',
+    rest: true
   },
   {
     stem: 'third',
@@ -106,8 +109,8 @@ const Singleton = SingletonFactory(Class, [
   }
 ]);
 
-/first1_second[0-9a-f]{40}_third[0-9a-f]{40}/.test(
-  Singleton.key(console, 'log', {color: 'red'})); // true
+/first1_second[0-9a-f]{40}_third[0-9a-f]{40}_second[0-9a-f]{40}/.test(
+  Singleton.key(console, 'log', {color: 'red'}, 'dummy')); // true
 ```
 
 ## 'object' vs 'literal' vs 'property'
@@ -191,6 +194,7 @@ s1 === Singleton(option1); // true
 s1 === Singleton({color: 'red'}); // true
 s1 === Singleton({color: 'red', size: 'Huge'}); // true
 ```
+
 ## License
 
 singletons is [MIT licensed](./LICENSE).

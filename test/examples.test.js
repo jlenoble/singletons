@@ -66,7 +66,8 @@ describe(`Testing README.md examples`, function() {
       },
       {
         stem: 'second',
-        type: 'literal'
+        type: 'literal',
+        rest: true
       },
       {
         stem: 'third',
@@ -74,8 +75,9 @@ describe(`Testing README.md examples`, function() {
       }
     ]);
 
-    expect(/first1_second[0-9a-f]{40}_third[0-9a-f]{40}/.test(
-      Singleton.key(console, 'log', {color: 'red'}))).to.be.true;
+    expect(/first1_second[0-9a-f]{40}_third[0-9a-f]{40}_second[0-9a-f]{40}/
+      .test(Singleton.key(console, 'log', {color: 'red'}, 'dummy')))
+      .to.be.true;
 
   });
 
