@@ -13,11 +13,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-var SingletonFactory = exports.SingletonFactory = function SingletonFactory(Type) {
-  var defaultKeyfunc = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function (obj) {
-    return obj.toString();
-  };
-
+var getKeyFunc = function getKeyFunc(defaultKeyfunc) {
 
   var keyfunc = defaultKeyfunc;
 
@@ -28,9 +24,18 @@ var SingletonFactory = exports.SingletonFactory = function SingletonFactory(Type
       keyfunc = _keyfunc3.default.apply(undefined, _toConsumableArray(keyfunc));
     } else {
 
-      throw new TypeError('Initializing argument should be a function generating unique keys ' + 'from arguments');
+      throw new TypeError('Initializing keyFunc argument should be a function generating unique\nkeys from arguments, or an array of hints');
     }
   }
+
+  return keyfunc;
+};
+
+var SingletonFactory = exports.SingletonFactory = function SingletonFactory(Type) {
+  var defaultKeyfunc = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function (obj) {
+    return obj.toString();
+  };
+
 
   var madeSingleton = function makeSingleton(_Type, _keyfunc) {
 
@@ -54,14 +59,14 @@ var SingletonFactory = exports.SingletonFactory = function SingletonFactory(Type
       return instance;
     };
 
-    Singleton.key = keyfunc;
+    Singleton.key = _keyfunc;
     Singleton.singleton = function singleton(_key) {
 
       return instances.get(_key);
     };
 
     return Singleton;
-  }(Type, keyfunc);
+  }(Type, getKeyFunc(defaultKeyfunc));
 
   return madeSingleton;
 };

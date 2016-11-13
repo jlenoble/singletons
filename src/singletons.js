@@ -1,7 +1,6 @@
 import keyFunc from 'keyfunc';
 
-export const SingletonFactory = function SingletonFactory (
-  Type, defaultKeyfunc = obj => obj.toString()) {
+const getKeyFunc = function getKeyFunc (defaultKeyfunc) {
 
   let keyfunc = defaultKeyfunc;
 
@@ -14,12 +13,19 @@ export const SingletonFactory = function SingletonFactory (
     } else {
 
       throw new TypeError(
-        'Initializing argument should be a function generating unique keys ' +
-        'from arguments');
+        `Initializing keyFunc argument should be a function generating unique
+keys from arguments, or an array of hints`);
 
     }
 
   }
+
+  return keyfunc;
+
+};
+
+export const SingletonFactory = function SingletonFactory (
+  Type, defaultKeyfunc = obj => obj.toString()) {
 
   const madeSingleton = (function makeSingleton (_Type, _keyfunc) {
 
@@ -42,7 +48,7 @@ export const SingletonFactory = function SingletonFactory (
 
     };
 
-    Singleton.key = keyfunc;
+    Singleton.key = _keyfunc;
     Singleton.singleton = function singleton (_key) {
 
       return instances.get(_key);
@@ -51,7 +57,7 @@ export const SingletonFactory = function SingletonFactory (
 
     return Singleton;
 
-  }(Type, keyfunc));
+  }(Type, getKeyFunc(defaultKeyfunc)));
 
   return madeSingleton;
 
