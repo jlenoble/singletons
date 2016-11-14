@@ -13,7 +13,7 @@ SingletonFactory takes two arguments. The first one specifies the constructor fo
 
 If you provide a function, it should take as arguments your indexes and return a unique key as a string. But if you provide an array of options, a custom function will be generated for you using module [keyfunc](https://www.npmjs.com/package/keyfunc).
 
-In the latter case, options should hint on the nature of the expected indexing data. Keywords are 'object', 'literal' and 'property' used as in the following example:
+In the latter case, options should hint on the nature of the expected indexing data. Keywords are 'object', 'literal', 'property', 'array' and 'set' used as in the following example:
 
 ```js
 import {SingletonFactory} from 'singletons';
@@ -25,13 +25,18 @@ const Singleton = SingletonFactory(
   [
     'object', // First argument must be an object matched strictly
     'literal', // Second argument can be anything matched literally
-    {property: 'color'} // Third argument and all subsequent ones can be
+    {property: 'color'}, // Third argument and all subsequent ones can be
     // anything matched literally from their property 'id' downwards
+    'array', // Fourth argument is an array of 'object'
+    'set' // Fifth argument is a set of 'object'
   ]
 );
 
-const s1 = Singleton(console, 'log', {color: 'red'});
-const s2 = Singleton(console, 'log', {color: 'red'});
+const obj = {id: 1};
+const s1 = Singleton(console, 'log', {color: 'red'}, [console, obj],
+  [console, obj]);
+const s2 = Singleton(console, 'log', {color: 'red'}, [console, obj],
+  [obj, console]);
 
 s1 === s2; // true
 s1 instanceof Class; // true
@@ -106,11 +111,20 @@ const Singleton = SingletonFactory(Class, [
   {
     stem: 'third',
     property: 'color'
+  },
+  {
+    stem: 'fourth',
+    type: 'array'
+  },
+  {
+    stem: 'fifth',
+    type: 'set'
   }
 ]);
 
-/first1_second[0-9a-f]{40}_third[0-9a-f]{40}_second[0-9a-f]{40}/.test(
-  Singleton.key(console, 'log', {color: 'red'}, 'dummy')); // true
+const obj = {id: 1};
+/first1_second[0-9a-f]{40}_third[0-9a-f]{40}_fourth[0-9a-f]{40}_fifth[0-9a-f]{40}_second[0-9a-f]{40}/.test(
+  Singleton.key(console, 'log', {color: 'red'}, [console, obj], [obj, console], 'dummy')); // true
 ```
 
 ## 'object' vs 'literal' vs 'property'
@@ -193,6 +207,56 @@ s3 !== s1; // true
 s1 === Singleton(option1); // true
 s1 === Singleton({color: 'red'}); // true
 s1 === Singleton({color: 'red', size: 'Huge'}); // true
+```
+
+## 'array' vs 'set'
+
+When using arrays as arguments, you may either match them simply by using the 'literal' option, or using the 'array' or 'set' options. In the latter case, each element in the list is matched using the 'object' option.
+
+### 'array' option
+
+Use this when matching arrays where order matters and matching literal objects should be considered different.
+
+```js
+import {SingletonFactory} from 'singletons';
+
+class Class {constructor() {}}
+
+const Singleton = SingletonFactory(Class, ['array']);
+
+const option1 = {color: 'red'};
+const option2 = {color: 'green'};
+const option3 = {color: 'blue'};
+
+const s1 = Singleton([option1, option2, option3]);
+const s2 = Singleton([option3, option2, option1]);
+const s3 = Singleton([option1, option2, option3]);
+
+s1 !== s2; // true
+s1 === s3; // true
+```
+
+### 'set' option
+
+Use this when matching arrays where order doesn't matter and matching literal objects shoud be considered different.
+
+```js
+import {SingletonFactory} from 'singletons';
+
+class Class {constructor() {}}
+
+const Singleton = SingletonFactory(Class, ['set']);
+
+const option1 = {color: 'red'};
+const option2 = {color: 'green'};
+const option3 = {color: 'blue'};
+
+const s1 = Singleton([option1, option2, option3]);
+const s2 = Singleton([option3, option2, option1]);
+const s3 = Singleton([option1, option2, option3]);
+
+s1 === s2; // true
+s1 === s3; // true
 ```
 
 ## License
