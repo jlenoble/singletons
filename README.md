@@ -25,8 +25,7 @@ const Singleton = SingletonFactory(
   [
     'object', // First argument must be an object matched strictly
     'literal', // Second argument can be anything matched literally
-    {property: 'color'}, // Third argument and all subsequent ones can be
-    // anything matched literally from their property 'id' downwards
+    {property: 'color'}, // Third argument can be anything matched literally from their property 'id' downwards
     'array', // Fourth argument is an array of 'object'
     'set' // Fifth argument is a set of 'object'
   ]
