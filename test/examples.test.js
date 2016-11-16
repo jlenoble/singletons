@@ -60,6 +60,22 @@ describe(`Testing README.md examples`, function() {
 
     const s1 = Singleton(console);
 
+    expect(Singleton.get(console)).to.equal(s1);
+    expect(Singleton.get(Number)).to.be.undefined;
+
+  });
+
+  it('Function get(...args) example', function() {
+
+    const Singleton = SingletonFactory(
+      this.Class,
+      [
+        'object'
+      ]
+    );
+
+    const s1 = Singleton(console);
+
     expect(Singleton.singleton('1')).to.equal(s1);
 
   });

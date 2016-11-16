@@ -41,7 +41,7 @@ s1 === s2; // true
 s1 instanceof Class; // true
 ```
 
-## Function key(...args)
+## Function ```key(...args)```
 
 The generated Singleton function has a property ```key``` that returns the
 generated key for any given set of arguments.
@@ -64,7 +64,7 @@ Singleton.key(console) === '1'; // true
 Singleton.key(new Class()) === '3'; // true
 ```
 
-## Function singleton(key)
+## Function ```singleton(key)```
 
 The generated Singleton function has a property ```singleton``` that returns the singleton referenced by a specific key.
 
@@ -84,6 +84,29 @@ const s1 = Singleton(console);
 
 Singleton.singleton('1') === s1; // true
 ```
+
+## Function ```get(...args)```
+
+The generated Singleton function has a property ```get``` that returns the singleton for any given set of arguments. This is actually the behavior of the Singleton function too, except that the latter would create the asked for singleton on the fly if it doesn't find it. Therefore use rather ```Singleton.get``` if you don't want to create singletons that are not found.
+
+```js
+import {SingletonFactory} from 'singletons';
+
+class Class {constructor() {}}
+
+const Singleton = SingletonFactory(
+  Class,
+  [
+    'object'
+  ]
+);
+
+const s1 = Singleton(console);
+
+Singleton.get(console) === s1; // true
+Singleton.get(Number) === undefined; // true
+```
+
 
 ### Options
 
