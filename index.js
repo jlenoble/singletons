@@ -64,6 +64,10 @@ var SingletonFactory = exports.SingletonFactory = function SingletonFactory(Type
 
       return instances.get(_key);
     };
+    Singleton.get = function get() {
+
+      return instances.get(_keyfunc.apply(undefined, arguments));
+    };
 
     return Singleton;
   }(Type, getKeyFunc(defaultKeyfunc));

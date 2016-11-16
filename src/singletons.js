@@ -58,7 +58,7 @@ export const SingletonFactory = function SingletonFactory (
 
       return instances.get(_keyfunc(...args));
 
-    }
+    };
 
     return Singleton;
 
