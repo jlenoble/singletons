@@ -107,7 +107,6 @@ Singleton.get(console) === s1; // true
 Singleton.get(Number) === undefined; // true
 ```
 
-
 ### Options
 
 * ```stem```: You may use option 'stem' to prepend to your keys a specific string. That helps figuring out what they were generated from. You need to use this option in combination with option 'type' if you want to use also option 'literal'.
