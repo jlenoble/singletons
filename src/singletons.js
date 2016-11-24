@@ -30,9 +30,10 @@ export const SingletonFactory = function SingletonFactory (
   const madeSingleton = (function makeSingleton (_Type, _keyfunc) {
 
     const instances = new Map();
+    const keySymb = Symbol();
     const Singleton = function Singleton (...args) {
 
-      const key = _keyfunc(...args);
+      const key = Singleton.key(...args);
       let instance = instances.get(key);
 
       if (instance) {
@@ -42,13 +43,19 @@ export const SingletonFactory = function SingletonFactory (
       }
 
       instance = new _Type(...args);
+      instance[keySymb] = key;
       instances.set(key, instance);
 
       return instance;
 
     };
 
-    Singleton.key = _keyfunc;
+    Singleton.key = (arg0, ...args) => {
+      if (arg0[keySymb]) {
+        return arg0[keySymb];
+      }
+      return _keyfunc(arg0, ...args);
+    }
     Singleton.singleton = function singleton (_key) {
 
       return instances.get(_key);
@@ -56,7 +63,7 @@ export const SingletonFactory = function SingletonFactory (
     };
     Singleton.get = function get (...args) {
 
-      return instances.get(_keyfunc(...args));
+      return instances.get(Singleton.key(...args));
 
     };
 

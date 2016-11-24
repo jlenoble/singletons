@@ -280,6 +280,29 @@ s1 === s2; // true
 s1 === s3; // true
 ```
 
+## Special case: Singleton(singleton)
+
+Some types can be initialized either from a set of data or from another instance. In order for a Singleton function not to get confused, each created singleton stores its key with a specific symbol associated uniquely to the Singleton function.
+
+When a Singleton function is passed a singleton with its own symbol, it just returns it without any further processing, as expected from a singleton.
+
+```js
+import {SingletonFactory} from 'singletons';
+
+class Class {constructor() {}}
+
+const Singleton = SingletonFactory(Class, ['object']);
+
+const option1 = {color: 'red'};
+
+const s1 = Singleton(option1);
+const s2 = Singleton(option1);
+const s3 = Singleton(s1);
+
+s1 === s2; // true
+s1 === s3; // true
+```
+
 ## License
 
 singletons is [MIT licensed](./LICENSE).
