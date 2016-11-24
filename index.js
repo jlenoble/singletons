@@ -40,12 +40,13 @@ var SingletonFactory = exports.SingletonFactory = function SingletonFactory(Type
   var madeSingleton = function makeSingleton(_Type, _keyfunc) {
 
     var instances = new Map();
+    var keySymb = Symbol();
     var Singleton = function Singleton() {
       for (var _len = arguments.length, args = Array(_len), _key2 = 0; _key2 < _len; _key2++) {
         args[_key2] = arguments[_key2];
       }
 
-      var key = _keyfunc.apply(undefined, args);
+      var key = Singleton.key.apply(Singleton, args);
       var instance = instances.get(key);
 
       if (instance) {
@@ -54,19 +55,31 @@ var SingletonFactory = exports.SingletonFactory = function SingletonFactory(Type
       }
 
       instance = new (Function.prototype.bind.apply(_Type, [null].concat(args)))();
+      instance[keySymb] = key;
       instances.set(key, instance);
 
       return instance;
     };
 
-    Singleton.key = _keyfunc;
+    Singleton.key = function (arg0) {
+      for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key3 = 1; _key3 < _len2; _key3++) {
+        args[_key3 - 1] = arguments[_key3];
+      }
+
+      if (arg0[keySymb]) {
+
+        return arg0[keySymb];
+      }
+
+      return _keyfunc.apply(undefined, [arg0].concat(args));
+    };
     Singleton.singleton = function singleton(_key) {
 
       return instances.get(_key);
     };
     Singleton.get = function get() {
 
-      return instances.get(_keyfunc.apply(undefined, arguments));
+      return instances.get(Singleton.key.apply(Singleton, arguments));
     };
 
     return Singleton;

@@ -22,6 +22,7 @@
     "indent": ["error", 2],
     "no-param-reassign": ["error", {"props": true}],
     "one-var": ["error", "never"],
+    "symbol-description": ["off"],
     "quotes": ["error", "single"]
   }
 }

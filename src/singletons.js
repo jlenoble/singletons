@@ -51,11 +51,16 @@ export const SingletonFactory = function SingletonFactory (
     };
 
     Singleton.key = (arg0, ...args) => {
+
       if (arg0[keySymb]) {
+
         return arg0[keySymb];
+
       }
+
       return _keyfunc(arg0, ...args);
-    }
+
+    };
     Singleton.singleton = function singleton (_key) {
 
       return instances.get(_key);
