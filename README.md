@@ -41,6 +41,8 @@ s1 === s2; // true
 s1 instanceof Class; // true
 ```
 
+See also [Advanced usage](#advanced-usage) for constructs ```'array:*'``` and ```'set:*'```.
+
 ## Function ```key(...args)```
 
 The generated Singleton function has a property ```key``` that returns the
@@ -302,6 +304,21 @@ const s3 = Singleton(s1);
 s1 === s2; // true
 s1 === s3; // true
 ```
+
+## Advanced Usage
+
+By default, options ```'array'``` and ```'set'``` define arrays and sets of objects compared with strict equality (```===```). When the comparison can (or should) be relaxed or precised, those options can be extended as such:
+
+* ```'array:literal'```: Expects an array of literals (strictly ordered).
+* ```'array:property:[propertyName]'```: Expects an array of objects with property 'propertyName' (strictly ordered).
+* ```'array:array'```: Expects an array (strictly ordered) of arrays (strictly ordered) of objects (strictly compared).
+* ```'array:set'```: Expects an array (strictly ordered) of arrays (unordered) of objects (strictly compared).
+* ```'set:literal'```: Expects an array of literals (unordered).
+* ```'set:property:[propertyName]'```: Expects an array of objects with property 'propertyName' (unordered).
+* ```'set:array'```: Expects an array (unordered) of arrays (strictly ordered) of objects (strictly compared).
+* ```'set:set'```: Expects an array (unordered) of arrays (unordered) of objects (strictly compared).
+
+Deeper control is not supported.
 
 ## License
 
