@@ -115,8 +115,8 @@ describe('Testing Singleton with property', function() {
 
     expect(s1).not.to.equal(s2);
     expect(s1).to.equal(s3);
-    expect(Singleton.key(s1)).not.to.equal(signature(1)); // Bad!!!
-    expect(Singleton.key(s1)).to.equal(signature({id: 1})); // Bad!!!
+    expect(Singleton.key(s1)).not.to.equal(signature({id: 1}));
+    expect(Singleton.key(s1)).to.equal(signature(1));
 
   });
 
