@@ -221,4 +221,39 @@ describe(`Testing README.md examples`, function() {
 
   });
 
+  it('Mixed arrays', function() {
+    class Class {}
+
+    const brokenSingleton = SingletonFactory(Class,
+      [{type: 'literal', rest: true}]);
+
+    const goodSingleton = SingletonFactory(Class, [{
+      type: 'array', // Mandatory
+      sub: ['object', 'literal'],
+      rest: true // Expects a list of mixed arrays, not only a single one
+    }]);
+
+    const o1 = {name: 1};
+    const o2 = {name: 2};
+    const o3 = {name: 3};
+
+    const broken = brokenSingleton([o1, 'name'], [o2, 'name'], [o3, 'name']);
+    const good = goodSingleton([o1, 'name'], [o2, 'name'], [o3, 'name']);
+
+    o1.name = 4;
+
+    // Though called broken, this may be intended behavior in your use
+    // case; it is 'broken' only with regard to this example intended behavior,
+    // which expects first arg of arrays to be evaluated strictly.
+    expect(broken).not.to.equal(brokenSingleton(
+      [o1, 'name'], [o2, 'name'], [o3, 'name']));
+    expect(broken).to.equal(brokenSingleton(
+      [{name: 1}, 'name'], [o2, 'name'], [o3, 'name']));
+
+    expect(good).to.equal(goodSingleton(
+      [o1, 'name'], [o2, 'name'], [o3, 'name']));
+    expect(good).not.to.equal(goodSingleton(
+      [{name: 1}, 'name'], [o2, 'name'], [o3, 'name']));
+  });
+
 });
