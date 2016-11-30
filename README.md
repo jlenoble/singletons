@@ -386,13 +386,13 @@ import SingletonFactory from 'singletons';
 
 class Class {}
 
-const brokenSingleton = SingletonFactory(Class, {property: 'data', rest: true});
+const brokenSingleton = SingletonFactory(Class, [{property: 'data', rest: true}]);
 
-const goodSingleton = SingletonFactory(Class, {
+const goodSingleton = SingletonFactory(Class, [{
   property: 'data', // Mandatory
   sub: {type: 'array', sub: ['object', 'literal']},
   rest: true // Expects a list of mixed arrays, not only a single one
-});
+}]);
 
 const o1 = {name: 1};
 const o2 = {name: 2};
