@@ -322,13 +322,16 @@ By default, options ```'array'``` and ```'set'``` define arrays and sets of obje
 
 ### ```property:*```
 
-By default, option ```'property'``` indicates that objects will be compared with regard to a particular property, specified as an option: ```keyFunc({property: 'id'})``` for example.
+By default, option ```'property'``` indicates that objects will be compared with regard to a particular property, specified as an option: ```keyFunc({type:  'property', property: 'id'})``` for example.
 
 The comparison in such cases will be done literally. But if you want another type of comparison, you may use the following:
 
-* ```'property:object'```: Expects property to be an object, strictly compared.
-* ```'property:array'```: Expects property to be an array (strictly ordered) of objects (strictly compared).
-* ```'property:set'```: Expects property to be an array (unordered) of objects (strictly compared).
+* ```{type: 'property:object'}```: Expects property to be an object, strictly compared.
+* ```{type: 'property:literal'}```: No difference from the default 'property'.
+* ```{type: 'property:array'}```: Expects property to be an array (strictly ordered) of objects (strictly compared).
+* ```{type: 'property:set'}```: Expects property to be an array (unordered) of objects (strictly compared).
+
+**Note that ```'property:property:[propertyName]'```, though working, is not recommended**. The construct ```keyFunc(Class, [{type: 'property:property:id', property: 'data'}])``` is just too ambiguous and is better replaced by ```keyFunc(Class, [{property: 'data:id'}])``` (see [Deep properties](#deep-properties)).
 
 ## License
 
