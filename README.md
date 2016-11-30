@@ -320,6 +320,8 @@ By default, options ```'array'``` and ```'set'``` define arrays and sets of obje
 * ```'set:array'```: Expects an array (unordered) of arrays (strictly ordered) of objects (strictly compared).
 * ```'set:set'```: Expects an array (unordered) of arrays (unordered) of objects (strictly compared).
 
+For other element types, you will need to use option 'sub' instead. See [Mixed arrays](#mixed-arrays).
+
 ### ```property:*```
 
 By default, option ```'property'``` indicates that objects will be compared with regard to a particular property, specified as an option: ```keyFunc({type:  'property', property: 'id'})``` for example.
