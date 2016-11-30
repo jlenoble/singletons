@@ -471,20 +471,26 @@ class Person {
   }
 }
 
-const oSingleton = SingletonFactory(Person,
-  {type: 'array', sub: ['literal', 'literal'], rest: true});
-const uSingleton = SingletonFactory(Person,
-  {type: 'array', sub: ['literal', 'literal'], unordered: true});
+class Family {
+  constructor(...members) {
+    this.members = members.map(member => new Person(...member));
+  }
+}
+
+const oFamily = SingletonFactory(Family,
+  [{type: 'array', sub: ['literal', 'literal'], rest: true}]);
+const uFamily = SingletonFactory(Family,
+  [{type: 'array', sub: ['literal', 'literal'], unordered: true}]);
 
 const info1 = ['Adam', 'Blue'];
-const info2 = ['Betsy', 'Red'];
-const info3 = ['Charlotte', 'Yellow'];
+const info2 = ['Betsy', 'Blue'];
+const info3 = ['Charlotte', 'Blue'];
 
-const daddyMummyDaughter = oSingleton(info1, info2, info3);
-const family = uSingleton(info1, info2, info3);
+const daddyMummyDaughter = oFamily(info1, info2, info3);
+const family = uFamily(info1, info2, info3);
 
-daddyMummyDaughter !== oSingleton(info3, info2, info1);
-family === uSingleton(info3, info2, info1);
+daddyMummyDaughter !== oFamily(info3, info2, info1);
+family === uFamily(info3, info2, info1);
 ```
 
 ## License
