@@ -333,6 +333,44 @@ The comparison in such cases will be done literally. But if you want another typ
 
 **Note that ```'property:property:[propertyName]'```, though working, is not recommended**. The construct ```keyFunc(Class, [{type: 'property:property:id', property: 'data'}])``` is just too ambiguous and is better replaced by ```keyFunc(Class, [{property: 'data:id'}])``` (see [Deep properties](#deep-properties)).
 
+### Mixed arrays
+
+With [```array:* and set:*```](#array-and-set), you get collections built from a single type, that is ```['object', 'object', ...]``` or ```['array', 'array', ...]``` for example. Using type hints as second argument of SingletonFactory, you can get keys from mixed types to index a singleton, but you do so one at a time. For example, ```(console, 'log')``` and ```(console, 'error')``` can map two singletons using ```keyFunc('object', 'literal')``` key function. But neither constructs allow to index collections of complex singletons: You can't index one for example with ```((console, 'log'), (console, 'error'))``` except by using ```keyFunc({type: 'literal', rest: true})```. But the latter option results in random side-effects once objects start getting mutated.
+
+Therefore you need deep indexing with option ```'sub'```.
+
+```js
+import SingletonFactory from 'singletons';
+
+class Class {}
+
+const brokenSingleton = SingletonFactory(Class, [{type: 'literal', rest: true}]);
+
+const goodSingleton = SingletonFactory(Class, [{
+  type: 'array', // Mandatory
+  sub: ['object', 'literal'],
+  rest: true // Expects a list of mixed arrays, not only a single one
+}]);
+
+const o1 = {name: 1};
+const o2 = {name: 2};
+const o3 = {name: 3};
+
+const broken = brokenSingleton([o1, 'name'], [o2, 'name'], [o3, 'name']);
+const good = goodSingleton([o1, 'name'], [o2, 'name'], [o3, 'name']);
+
+o1.name = 4;
+
+// Though called broken, this may be intended behavior in your use
+// case; it is 'broken' only with regard to this example intended behavior,
+// which expects first arg of arrays to be evaluated strictly.
+broken !== brokenSingleton([o1, 'name'], [o2, 'name'], [o3, 'name']);
+broken === brokenSingleton([{name: 1}, 'name'], [o2, 'name'], [o3, 'name']);
+
+good === goodSingleton([o1, 'name'], [o2, 'name'], [o3, 'name']);
+good !== goodSingleton([{name: 1}, 'name'], [o2, 'name'], [o3, 'name']);
+```
+
 ## License
 
 singletons is [MIT licensed](./LICENSE).
