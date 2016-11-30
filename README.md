@@ -337,6 +337,8 @@ The comparison in such cases will be done literally. But if you want another typ
 
 **Note that ```'property:property:[propertyName]'```, though working, is not recommended**. The construct ```keyFunc(Class, [{type: 'property:property:id', property: 'data'}])``` is just too ambiguous and is better replaced by ```keyFunc(Class, [{property: 'data:id'}])``` (see [Deep properties](#deep-properties)).
 
+For other property types, you will need to use option 'sub' instead. See [Mixed properties](#mixed-properties).
+
 ### Mixed arrays
 
 With [```array:* and set:*```](#array-and-set), you get collections built from a single type, that is ```['object', 'object', ...]``` or ```['array', 'array', ...]``` for example. Using type hints as second argument of SingletonFactory, you can get keys from mixed types to index a singleton, but you do so one at a time. For example, ```(console, 'log')``` and ```(console, 'error')``` can map two singletons using ```keyFunc('object', 'literal')``` key function. But neither constructs allow to index collections of complex singletons: You can't index one for example with ```((console, 'log'), (console, 'error'))``` except by using ```keyFunc({type: 'literal', rest: true})```. But the latter option results in random side-effects once objects start getting mutated.
