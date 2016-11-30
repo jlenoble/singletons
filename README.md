@@ -418,6 +418,38 @@ good !== goodSingleton({data: [{name: 1}, 'name']}, {data: [o2, 'name']},
   {data: [o3, 'name']});
 ```  
 
+### Deep properties
+
+Using the syntax of [Mixed properties](#mixed-properties), it's cumbersome to write hints to get to a deep property. But you can refine your declaration of 'property' to create the same singleton. See the following example:
+
+```js
+import SingletonFactory from 'singletons';
+
+class Class {}
+
+const cumbersomeSingleton = SingletonFactory(Class, [{
+  property: 'humanity',
+  sub: {
+    property: 'man',
+    sub: {
+      property: 'brain',
+      sub: {
+        property: 'thought'
+      }
+    }
+  }
+}]);
+const straightSingleton = SingletonFactory(Class, [{property: 'humanity:man:brain:thought'}]);
+
+const o = {humanity: {man: {brain: {thought: 'Duh?'}}}};
+
+cumbersomeSingleton(o) === cumbersomeSingleton({humanity: {man: {brain: {thought: 'Duh?'}}}});
+cumbersomeSingleton(o) !== cumbersomeSingleton({humanity: {man: {brain: {thought: 'Da!'}}}});
+straightSingleton(o) === straightSingleton({humanity: {man: {brain: {thought: 'Duh?'}}}});
+straightSingleton(o) !== straightSingleton({humanity: {man: {brain: {thought: 'Da!'}}}});
+cumbersomeSingleton(o) == straightSingleton(o));
+```
+
 ## License
 
 singletons is [MIT licensed](./LICENSE).
