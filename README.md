@@ -455,6 +455,38 @@ cumbersomeSingleton.key(o) === straightSingleton.key(o));
 // therefore are distinct.
 ```
 
+### Unordered lists
+
+Hints provided to SingletonFactory generates key functions that, when they accept more than one argument, enforce strict ordering of those arguments. This is due to the fact that by default, arguments don't share their type, and therefore don't share the function that generates their keys.
+
+But since all singletons have the same type, they are initialized for similar sets of arguments and strict ordering may sometimes be too restrictive. With option 'unordered' provided to the first (and only) hint type, the limitation is lifted.
+
+```js
+import SingletonFactory from 'singletons';
+
+class Person {
+  constructor(firstname, lastname) {
+    this.firstname = firstname;
+    this.lastname = lastname;
+  }
+}
+
+const oSingleton = SingletonFactory(Person,
+  {type: 'array', sub: ['literal', 'literal'], rest: true});
+const uSingleton = SingletonFactory(Person,
+  {type: 'array', sub: ['literal', 'literal'], unordered: true});
+
+const info1 = ['Adam', 'Blue'];
+const info2 = ['Betsy', 'Red'];
+const info3 = ['Charlotte', 'Yellow'];
+
+const daddyMummyDaughter = oSingleton(info1, info2, info3);
+const family = uSingleton(info1, info2, info3);
+
+daddyMummyDaughter !== oSingleton(info3, info2, info1);
+family === uSingleton(info3, info2, info1);
+```
+
 ## License
 
 singletons is [MIT licensed](./LICENSE).
