@@ -326,4 +326,34 @@ describe(`Testing README.md examples`, function() {
       straightSingleton.key(o));
   });
 
+  it(`Unordered lists`, function() {
+    class Person {
+      constructor(firstname, lastname) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+      }
+    }
+
+    class Family {
+      constructor(...members) {
+        this.members = members.map(member => new Person(...member));
+      }
+    }
+
+    const oFamily = SingletonFactory(Family,
+      [{type: 'array', sub: ['literal', 'literal'], rest: true}]);
+    const uFamily = SingletonFactory(Family,
+      [{type: 'array', sub: ['literal', 'literal'], unordered: true}]);
+
+    const info1 = ['Adam', 'Blue'];
+    const info2 = ['Betsy', 'Blue'];
+    const info3 = ['Charlotte', 'Blue'];
+
+    const daddyMummyDaughter = oFamily(info1, info2, info3);
+    const family = uFamily(info1, info2, info3);
+
+    expect(daddyMummyDaughter).not.to.equal(oFamily(info3, info2, info1));
+    expect(family).to.equal(uFamily(info3, info2, info1));
+  });
+
 });
