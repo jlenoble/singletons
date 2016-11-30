@@ -290,4 +290,40 @@ describe(`Testing README.md examples`, function() {
       {data: [o2, 'name']}, {data: [o3, 'name']}));
   });
 
+  it(`Deep properties`, function() {
+    class Class {
+      constructor(thought) {this.thought = thought;}
+    }
+
+    const cumbersomeSingleton = SingletonFactory(Class, [{
+      property: 'humanity',
+      sub: {
+        property: 'man',
+        sub: {
+          property: 'brain',
+          sub: {
+            property: 'thought'
+          }
+        }
+      }
+    }]);
+    const straightSingleton = SingletonFactory(Class,
+      [{property: 'humanity:man:brain:thought'}]);
+
+    const o = {humanity: {man: {brain: {thought: 'Duh?'}}}};
+
+    expect(cumbersomeSingleton(o)).to.equal(cumbersomeSingleton(
+      {humanity: {man: {brain: {thought: 'Duh?'}}}}));
+    expect(cumbersomeSingleton(o)).not.to.equal(cumbersomeSingleton(
+      {humanity: {man: {brain: {thought: 'Da!'}}}}));
+    expect(straightSingleton(o)).to.equal(straightSingleton(
+      {humanity: {man: {brain: {thought: 'Duh?'}}}}));
+    expect(straightSingleton(o)).not.to.equal(straightSingleton({
+      humanity: {man: {brain: {thought: 'Da!'}}}}));
+    expect(cumbersomeSingleton(o).thought).to.equal(
+      straightSingleton(o).thought);
+    expect(cumbersomeSingleton.key(o)).to.equal(
+      straightSingleton.key(o));
+  });
+
 });
