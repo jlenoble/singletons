@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git://github.com/jlenoble/singletons.git"
   },
-  "keywords": [],
+  "keywords": ["singleton", "singletons", "indexing"],
   "author": {
     "name": "Jason Lenoble",
     "email": "jason.lenoble@gmail.com"
