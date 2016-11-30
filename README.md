@@ -307,6 +307,8 @@ s1 === s3; // true
 
 ## Advanced Usage
 
+Hints provided to SingletonFactory can get more complex for subtle usages. You're not bound to the five base types, but can use any of them within 'array', 'set' and 'property' types, allowing for hierarchical indexing.
+
 ### ```array:*``` and ```set:*```
 
 By default, options ```'array'``` and ```'set'``` define arrays and sets of objects compared with strict equality (```===```). When the comparison can (or should) be relaxed or precised, those options can be extended as such:
