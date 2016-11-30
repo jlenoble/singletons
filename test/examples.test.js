@@ -256,4 +256,38 @@ describe(`Testing README.md examples`, function() {
       [{name: 1}, 'name'], [o2, 'name'], [o3, 'name']));
   });
 
+  it(`Mixed properties`, function() {
+    class Class {}
+
+    const brokenSingleton = SingletonFactory(Class,
+      [{property: 'data', rest: true}]);
+
+    const goodSingleton = SingletonFactory(Class, [{
+      property: 'data', // Mandatory
+      sub: {type: 'array', sub: ['object', 'literal']},
+      rest: true // Expects a list of mixed arrays, not only a single one
+    }]);
+
+    const o1 = {name: 1};
+    const o2 = {name: 2};
+    const o3 = {name: 3};
+
+    const broken = brokenSingleton({data: [o1, 'name']}, {data: [o2, 'name']},
+      {data: [o3, 'name']});
+    const good = goodSingleton({data: [o1, 'name']}, {data: [o2, 'name']},
+      {data: [o3, 'name']});
+
+    o1.name = 4;
+
+    expect(broken).not.to.equal(brokenSingleton({data: [o1, 'name']},
+      {data: [o2, 'name']}, {data: [o3, 'name']}));
+    expect(broken).to.equal(brokenSingleton({data: [{name: 1}, 'name']},
+      {data: [o2, 'name']}, {data: [o3, 'name']}));
+
+    expect(good).to.equal(goodSingleton({data: [o1, 'name']},
+      {data: [o2, 'name']}, {data: [o3, 'name']}));
+    expect(good).not.to.equal(goodSingleton({data: [{name: 1}, 'name']},
+      {data: [o2, 'name']}, {data: [o3, 'name']}));
+  });
+
 });
