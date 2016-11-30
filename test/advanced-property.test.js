@@ -90,7 +90,7 @@ describe('Testing Singleton with property', function() {
   });
 
   it(`Calling SingletonFactory(Class, [{
-    type: 'property:object',
+    type: 'property:array',
     property: 'data'
   }])`, function() {
 
