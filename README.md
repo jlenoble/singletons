@@ -156,7 +156,7 @@ There are advantages and drawbacks pertaining to each option type. Choose with c
 
 ### 'object' option
 
-Use this if you know your objects are persistent. When used on literals, you may end up with tons of singletons, a sign of a poor design. But this option allows for user-friendly (human-readable) keys, making accessing singletons easier.
+Use this if you know your objects are persistent. When used on literals, you may end up with tons of singletons, a sign of a broken design. But this option allows for user-friendly (human-readable) keys, making accessing singletons easier.
 
 ```js
 import {SingletonFactory} from 'singletons';
@@ -374,6 +374,47 @@ broken === brokenSingleton([{name: 1}, 'name'], [o2, 'name'], [o3, 'name']);
 good === goodSingleton([o1, 'name'], [o2, 'name'], [o3, 'name']);
 good !== goodSingleton([{name: 1}, 'name'], [o2, 'name'], [o3, 'name']);
 ```
+
+### Mixed properties
+
+With [```property:*```](#property), just like for [```array:* and set:*```](#array-and-set), your properties point to base types like 'object' or 'array'. That is an improvement compared to default 'literal', but you will often want more flexibility and index your singletons with arbitrary types.
+
+You can use the option 'sub' for that.
+
+```js
+import SingletonFactory from 'singletons';
+
+class Class {}
+
+const brokenSingleton = SingletonFactory(Class, {property: 'data', rest: true});
+
+const goodSingleton = SingletonFactory(Class, {
+  property: 'data', // Mandatory
+  sub: {type: 'array', sub: ['object', 'literal']},
+  rest: true // Expects a list of mixed arrays, not only a single one
+});
+
+const o1 = {name: 1};
+const o2 = {name: 2};
+const o3 = {name: 3};
+
+const broken = brokenSingleton({data: [o1, 'name']}, {data: [o2, 'name']},
+  {data: [o3, 'name']});
+const good = goodSingleton({data: [o1, 'name']}, {data: [o2, 'name']},
+  {data: [o3, 'name']});
+
+o1.name = 4;
+
+broken !== brokenSingleton({data: [o1, 'name']}, {data: [o2, 'name']},
+  {data: [o3, 'name']});
+broken === brokenSingleton({data: [{name: 1}, 'name']}, {data: [o2, 'name']},
+  {data: [o3, 'name']});
+
+good === goodSingleton({data: [o1, 'name']}, {data: [o2, 'name']},
+  {data: [o3, 'name']});
+good !== goodSingleton({data: [{name: 1}, 'name']}, {data: [o2, 'name']},
+  {data: [o3, 'name']});
+```  
 
 ## License
 
