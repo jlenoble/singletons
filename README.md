@@ -425,7 +425,9 @@ Using the syntax of [Mixed properties](#mixed-properties), it's cumbersome to wr
 ```js
 import SingletonFactory from 'singletons';
 
-class Class {}
+class Class {
+  constructor(thought) {this.thought = thought;}
+}
 
 const cumbersomeSingleton = SingletonFactory(Class, [{
   property: 'humanity',
@@ -447,7 +449,10 @@ cumbersomeSingleton(o) === cumbersomeSingleton({humanity: {man: {brain: {thought
 cumbersomeSingleton(o) !== cumbersomeSingleton({humanity: {man: {brain: {thought: 'Da!'}}}});
 straightSingleton(o) === straightSingleton({humanity: {man: {brain: {thought: 'Duh?'}}}});
 straightSingleton(o) !== straightSingleton({humanity: {man: {brain: {thought: 'Da!'}}}});
-cumbersomeSingleton(o) == straightSingleton(o));
+cumbersomeSingleton(o).thought === straightSingleton(o)).thought;
+cumbersomeSingleton.key(o) === straightSingleton.key(o));
+// Comparing keys, not objects which are from distinct factories,
+// therefore are distinct.
 ```
 
 ## License
