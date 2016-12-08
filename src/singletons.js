@@ -25,13 +25,15 @@ keys from arguments, or an array of hints`);
 };
 
 export const SingletonFactory = function SingletonFactory (
-  Type, defaultKeyfunc = obj => obj.toString()) {
+  Type, defaultKeyfunc = obj => obj.toString(), preprocess = args => args) {
 
-  const madeSingleton = (function makeSingleton (_Type, _keyfunc) {
+  const madeSingleton = (function makeSingleton (_Type, _keyfunc, _preprocess) {
 
     const instances = new Map();
     const keySymb = Symbol();
-    const Singleton = function Singleton (...args) {
+    const Singleton = function Singleton (..._args) {
+
+      const args = _preprocess(_args);
 
       const key = Singleton.key(...args);
       let instance = instances.get(key);
@@ -79,7 +81,7 @@ export const SingletonFactory = function SingletonFactory (
 
     return Singleton;
 
-  }(Type, getKeyFunc(defaultKeyfunc)));
+  }(Type, getKeyFunc(defaultKeyfunc), preprocess));
 
   return madeSingleton;
 
