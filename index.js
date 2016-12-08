@@ -35,18 +35,23 @@ var SingletonFactory = exports.SingletonFactory = function SingletonFactory(Type
   var defaultKeyfunc = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function (obj) {
     return obj.toString();
   };
+  var preprocess = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : function (args) {
+    return args;
+  };
 
 
-  var madeSingleton = function makeSingleton(_Type, _keyfunc) {
+  var madeSingleton = function makeSingleton(_Type, _keyfunc, _preprocess) {
 
     var instances = new Map();
     var keySymb = Symbol();
     var Singleton = function Singleton() {
-      for (var _len = arguments.length, args = Array(_len), _key2 = 0; _key2 < _len; _key2++) {
-        args[_key2] = arguments[_key2];
+      for (var _len = arguments.length, _args = Array(_len), _key2 = 0; _key2 < _len; _key2++) {
+        _args[_key2] = arguments[_key2];
       }
 
-      var key = Singleton.key.apply(Singleton, args);
+      var args = _preprocess(_args);
+
+      var key = Singleton.key.apply(Singleton, _toConsumableArray(args));
       var instance = instances.get(key);
 
       if (instance) {
@@ -54,7 +59,7 @@ var SingletonFactory = exports.SingletonFactory = function SingletonFactory(Type
         return instance;
       }
 
-      instance = new (Function.prototype.bind.apply(_Type, [null].concat(args)))();
+      instance = new (Function.prototype.bind.apply(_Type, [null].concat(_toConsumableArray(args))))();
       instance[keySymb] = key;
       instances.set(key, instance);
 
@@ -69,9 +74,6 @@ var SingletonFactory = exports.SingletonFactory = function SingletonFactory(Type
       if (arg0[keySymb]) {
 
         return arg0[keySymb];
-      } else if (Array.isArray(arg0) && arg0.length === 1 && arg0[0][keySymb]) {
-
-        return arg0[0][keySymb];
       }
 
       return _keyfunc.apply(undefined, [arg0].concat(args));
@@ -86,7 +88,7 @@ var SingletonFactory = exports.SingletonFactory = function SingletonFactory(Type
     };
 
     return Singleton;
-  }(Type, getKeyFunc(defaultKeyfunc));
+  }(Type, getKeyFunc(defaultKeyfunc), preprocess);
 
   return madeSingleton;
 };
