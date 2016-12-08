@@ -9,7 +9,7 @@ SingletonFactory is provided by module 'singletons'. Given a constructor and a s
 
 ## SingletonFactory syntax
 
-SingletonFactory takes two arguments. The first one specifies the constructor for the singletons, and the second one is a function or an array with at least as many arguments or elements as you expect data to index your objects. For example if it matters to you that methods be considered different if they are not bound to the same object, then you will need two arguments: One indexing the object and one indexing the method.
+SingletonFactory takes generally two arguments. The first one specifies the constructor for the singletons, and the second one is a function or an array with at least as many arguments or elements as you expect data to index your objects. For example if it matters to you that methods be considered different if they are not bound to the same object, then you will need two arguments: One indexing the object and one indexing the method.
 
 If you provide a function, it should take as arguments your indexes and return a unique key as a string. But if you provide an array of options, a custom function will be generated for you using module [keyfunc](https://www.npmjs.com/package/keyfunc).
 
@@ -495,6 +495,52 @@ const family = uFamily(info1, info2, info3);
 
 daddyMummyDaughter !== oFamily(info3, info2, info1);
 family === uFamily(info3, info2, info1);
+```
+
+### Preprocessing arguments
+
+```SingletonFactory``` can take a third argument, allowing to pass it a preprocessing function. This is useful when one has to handle inputs that don't match directly the provided hints, especially when passing already created singletons. On the one hand, passing a single singleton is handled by default (see [Special case: Singleton(singleton)](#special-case-singleton-singleton)). But on the other hand one may want to handle passing more than one singleton in conjunction with option 'rest: true'. This requires preprocessing, as shown in the following example.
+
+```js
+import SingletonFactory from 'singletons';
+
+class Class {
+  constructor(...chunks) {this.chunk = ['', ...chunks].reduce(
+    (str, chunk) => str + chunk);}
+}
+
+const Singleton = SingletonFactory(Class, [{type: 'literal', rest: true}],
+function(args) {
+  return args.map(arg => {
+    if (arg.chunk) {
+      return arg.chunk;
+    }
+    return arg;
+  });
+});
+const refSingleton = SingletonFactory(Class,
+  [{type: 'literal', rest: true}]);
+
+const chunk1 = 'foo';
+const chunk2 = 'bar';
+
+const s1 = Singleton(chunk1);
+const s2 = Singleton(chunk2);
+const s3 = Singleton(chunk1, chunk2);
+const s4 = Singleton(s1, s2);
+
+s1 !== s2;
+s1 !== s3;
+s3 === s4; // Preprocessing handled already created objects
+
+const t1 = refSingleton(chunk1);
+const t2 = refSingleton(chunk2);
+const t3 = refSingleton(chunk1, chunk2);
+const t4 = refSingleton(t1, t2);
+
+t1 !== t2;
+t1 !== t3;
+t3 !== t4;
 ```
 
 ## License
