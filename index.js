@@ -69,6 +69,9 @@ var SingletonFactory = exports.SingletonFactory = function SingletonFactory(Type
       if (arg0[keySymb]) {
 
         return arg0[keySymb];
+      } else if (Array.isArray(arg0) && arg0.length === 1 && arg0[0][keySymb]) {
+
+        return arg0[0][keySymb];
       }
 
       return _keyfunc.apply(undefined, [arg0].concat(args));
