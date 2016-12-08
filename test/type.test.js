@@ -73,9 +73,17 @@ describe('Testing Singleton with Type initialization', function() {
   it(`Calling two different Singletons with [same Type object]`, function() {
 
     class Class {constructor() {}}
+    function preprocess(args) {
+      return args.map(arg => {
+        if (Array.isArray(arg)) {
+          return arg[0];
+        }
+        return arg;
+      });
+    }
 
-    const Singleton1 = SingletonFactory(Class, [{stem: 'ONE'}]);
-    const Singleton2 = SingletonFactory(Class, [{stem: 'TWO'}]);
+    const Singleton1 = SingletonFactory(Class, [{stem: 'ONE'}], preprocess);
+    const Singleton2 = SingletonFactory(Class, [{stem: 'TWO'}], preprocess);
 
     const c = new Class();
     expect(Singleton1.key(c)).to.equal('ONE1');

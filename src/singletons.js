@@ -58,11 +58,6 @@ export const SingletonFactory = function SingletonFactory (
 
         return arg0[keySymb];
 
-      } else if (Array.isArray(arg0) && arg0.length === 1 &&
-        arg0[0][keySymb]) {
-
-        return arg0[0][keySymb];
-
       }
 
       return _keyfunc(arg0, ...args);
