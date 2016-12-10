@@ -13,7 +13,7 @@ SingletonFactory takes generally two arguments. The first one specifies the cons
 
 If you provide a function, it should take as arguments your indexes and return a unique key as a string. But if you provide an array of options, a custom function will be generated for you using module [keyfunc](https://www.npmjs.com/package/keyfunc).
 
-In the latter case, options should hint on the nature of the expected indexing data. Keywords are 'object', 'literal', 'property', 'array' and 'set' used as in the following example:
+In the latter case, options should hint on the nature of the expected indexing data. Keywords are 'object', 'literal', 'property', 'array', 'set' and 'ignore' used as in the following example:
 
 ```js
 import {SingletonFactory} from 'singletons';
@@ -27,15 +27,16 @@ const Singleton = SingletonFactory(
     'literal', // Second argument can be anything matched literally
     {property: 'color'}, // Third argument can be anything matched literally from their property 'id' downwards
     'array', // Fourth argument is an array of 'object'
-    'set' // Fifth argument is a set of 'object'
+    'set', // Fifth argument is a set of 'object'
+    'ignore' // Sixth argument is ignored
   ]
 );
 
 const obj = {id: 1};
 const s1 = Singleton(console, 'log', {color: 'red'}, [console, obj],
-  [console, obj]);
+  [console, obj], console);
 const s2 = Singleton(console, 'log', {color: 'red'}, [console, obj],
-  [obj, console]);
+  [obj, console], 'dummy');
 
 s1 === s2; // true
 s1 instanceof Class; // true
