@@ -45,6 +45,6 @@
     "plumb-gulp": "^0.1.0"
   },
   "dependencies": {
-    "keyfunc": "^0.6.0"
+    "keyfunc": "^0.7.0"
   }
 }
