@@ -24,10 +24,14 @@ keys from arguments, or an array of hints`);
 
 };
 
-export const SingletonFactory = function SingletonFactory (
-  Type, defaultKeyfunc = obj => obj.toString(), preprocess = args => args) {
+const idFunc = args => args;
 
-  const madeSingleton = (function makeSingleton (_Type, _keyfunc, _preprocess) {
+export const SingletonFactory = function SingletonFactory (
+  Type, defaultKeyfunc = obj => obj.toString(), preprocess = idFunc,
+  postprocess = idFunc) {
+
+  const madeSingleton = (function makeSingleton (_Type, _keyfunc, _preprocess,
+    _postprocess) {
 
     const instances = new Map();
     const keySymb = Symbol();
@@ -40,7 +44,7 @@ export const SingletonFactory = function SingletonFactory (
 
       if (instance) {
 
-        return instance;
+        return _postprocess(instance);
 
       }
 
@@ -48,7 +52,7 @@ export const SingletonFactory = function SingletonFactory (
       instance[keySymb] = key;
       instances.set(key, instance);
 
-      return instance;
+      return _postprocess(instance);
 
     };
 
@@ -76,7 +80,7 @@ export const SingletonFactory = function SingletonFactory (
 
     return Singleton;
 
-  }(Type, getKeyFunc(defaultKeyfunc), preprocess));
+  }(Type, getKeyFunc(defaultKeyfunc), preprocess, postprocess));
 
   return madeSingleton;
 
