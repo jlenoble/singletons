@@ -1,6 +1,6 @@
 {
   "name": "singletons",
-  "version": "0.6.5",
+  "version": "0.7.0",
   "description": "Helps create and manage families of singletons based on customizable conditions",
   "main": "index.js",
   "scripts": {
