@@ -25,7 +25,7 @@ export const SingletonFactory = function SingletonFactory(
   }) {
   const madeSingleton = (function makeSingleton(_Type, _keyfunc, _options) {
     const preprocess = _options.preprocess || idFunc;
-    const postprocess = _options.postprocess || idFunc;    
+    const postprocess = _options.postprocess || idFunc;
 
     const instances = new Map();
     const keySymb = Symbol();
@@ -36,14 +36,14 @@ export const SingletonFactory = function SingletonFactory(
       let instance = instances.get(key);
 
       if (instance) {
-        return postprocess(instance);
+        return postprocess(instance, args);
       }
 
       instance = new _Type(...args);
       instance[keySymb] = key;
       instances.set(key, instance);
 
-      return postprocess(instance);
+      return postprocess(instance, args);
     };
 
     Singleton.key = (arg0, ...args) => {

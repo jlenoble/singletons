@@ -351,7 +351,7 @@ With [```array:* and set:*```](#array-and-set), you get collections built from a
 Therefore you need deep indexing with option ```'sub'```.
 
 ```js
-import SingletonFactory from 'singletons';
+import {SingletonFactory} from 'singletons';
 
 class Class {}
 
@@ -389,7 +389,7 @@ With [```property:*```](#property), just like for [```array:* and set:*```](#arr
 You can use the option 'sub' for that.
 
 ```js
-import SingletonFactory from 'singletons';
+import {SingletonFactory} from 'singletons';
 
 class Class {}
 
@@ -428,7 +428,7 @@ good !== goodSingleton({data: [{name: 1}, 'name']}, {data: [o2, 'name']},
 Using the syntax of [Mixed properties](#mixed-properties), it's cumbersome to write hints to get to a deep property. But you can refine your declaration of 'property' to create the same singleton. See the following example:
 
 ```js
-import SingletonFactory from 'singletons';
+import {SingletonFactory} from 'singletons';
 
 class Class {
   constructor(thought) {this.thought = thought;}
@@ -467,7 +467,7 @@ Hints provided to SingletonFactory generates key functions that, when they accep
 But since all singletons have the same type, they are initialized for similar sets of arguments and strict ordering may sometimes be too restrictive. With option 'unordered' provided to the first (and only) hint type, the limitation is lifted.
 
 ```js
-import SingletonFactory from 'singletons';
+import {SingletonFactory} from 'singletons';
 
 class Person {
   constructor(firstname, lastname) {
@@ -503,7 +503,7 @@ family === uFamily(info3, info2, info1);
 ```SingletonFactory``` can take a third argument, allowing to pass it a preprocessing function. This is useful when one has to handle inputs that don't match directly the provided hints, especially when passing already created singletons. On the one hand, passing a single singleton is handled by default (see [Special case: Singleton(singleton)](#special-case-singleton-singleton)). But on the other hand one may want to handle passing more than one singleton in conjunction with option 'rest: true'. This requires preprocessing, as shown in the example below.
 
 ```js
-import SingletonFactory from 'singletons';
+import {SingletonFactory} from 'singletons';
 
 class Class {
   constructor(...chunks) {this.chunk = ['', ...chunks].reduce(
@@ -548,7 +548,37 @@ t3 !== t4;
 
 Sometimes, you want to update your singleton on invocation. This is not advised as it can have side effects, but for example if you ignore some arguments using the type 'ignore', then whatever you use for these arguments on invocation will be discarded from the second call onwards, since the singleton will just be recalled and the constructor not called again. That's probably unwanted behavior and the option postprocess gives an opportunity to correct that.
 
-To pass that option, use the third argument of the SingletonFactory. This option must be an object with property 'postprocess' as a function that must take your singleton as argument and return it. Whatever you do to it inside is your responsability.
+To pass that option, use the third argument of the SingletonFactory. This option must be an object with property 'postprocess' as a function that must take your singleton as first argument, optionally all the arguments passed to the Singleton as second argument and return  the instance.
+
+```js
+import {SingletonFactory} from 'singletons';
+
+class Person {
+  constructor (firstname, lastname, options) {
+    this.firstname = firstname;
+    this.lastname = lastname;
+    this.where = options.where;
+  }
+}
+
+const Inhabitant = SingletonFactory(Person, ['literal', 'literal', 'ignore'], {
+  postprocess: function (instance, args) {
+    if (args && args[2] && args[2].where) {
+      instance.where = args[2].where;
+    }
+    return instance;
+  }
+});
+
+const annie = new Inhabitant('Annie', 'Smith', {where: 'Los Angeles'});
+
+annie.where === 'Los Angeles'; // true
+annie === Inhabitant('Annie', 'Smith'); // true
+annie.where === 'Los Angeles'; // true
+annie === Inhabitant('Annie', 'Smith', {where: 'Los Aggeles'}); // true
+annie === Inhabitant('Annie', 'Smith', {where: 'New York'}); // true
+annie.where === 'New York'; // true because of postprocessing, otherwise ignored
+```
 
 ## License
 
