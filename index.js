@@ -41,12 +41,8 @@ var SingletonFactory = exports.SingletonFactory = function SingletonFactory(Type
   };
 
   var madeSingleton = function makeSingleton(_Type, _keyfunc, _options) {
-    var _ref = typeof _options === 'function' ? {
-      preprocess: _options,
-      postprocess: idFunc
-    } : _options,
-        preprocess = _ref.preprocess,
-        postprocess = _ref.postprocess;
+    var preprocess = _options.preprocess || idFunc;
+    var postprocess = _options.postprocess || idFunc;
 
     var instances = new Map();
     var keySymb = Symbol();
@@ -61,14 +57,14 @@ var SingletonFactory = exports.SingletonFactory = function SingletonFactory(Type
       var instance = instances.get(key);
 
       if (instance) {
-        return postprocess(instance);
+        return postprocess(instance, args);
       }
 
       instance = new (Function.prototype.bind.apply(_Type, [null].concat(_toConsumableArray(args))))();
       instance[keySymb] = key;
       instances.set(key, instance);
 
-      return postprocess(instance);
+      return postprocess(instance, args);
     };
 
     Singleton.key = function (arg0) {
