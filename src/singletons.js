@@ -27,24 +27,30 @@ keys from arguments, or an array of hints`);
 const idFunc = args => args;
 
 export const SingletonFactory = function SingletonFactory (
-  Type, defaultKeyfunc = obj => obj.toString(), preprocess = idFunc,
-  postprocess = idFunc) {
+  Type, defaultKeyfunc = obj => obj.toString(), options = {
+    preprocess: idFunc,
+    postprocess: idFunc,
+  }) {
 
-  const madeSingleton = (function makeSingleton (_Type, _keyfunc, _preprocess,
-    _postprocess) {
+  const madeSingleton = (function makeSingleton (_Type, _keyfunc, _options) {
+
+    const {preprocess, postprocess} = typeof _options === 'function' ? {
+      preprocess: _options,
+      postprocess: idFunc,
+    } : _options;
 
     const instances = new Map();
     const keySymb = Symbol();
     const Singleton = function Singleton (..._args) {
 
-      const args = _preprocess(_args);
+      const args = preprocess(_args);
 
       const key = Singleton.key(...args);
       let instance = instances.get(key);
 
       if (instance) {
 
-        return _postprocess(instance);
+        return postprocess(instance);
 
       }
 
@@ -52,7 +58,7 @@ export const SingletonFactory = function SingletonFactory (
       instance[keySymb] = key;
       instances.set(key, instance);
 
-      return _postprocess(instance);
+      return postprocess(instance);
 
     };
 
@@ -80,7 +86,7 @@ export const SingletonFactory = function SingletonFactory (
 
     return Singleton;
 
-  }(Type, getKeyFunc(defaultKeyfunc), preprocess, postprocess));
+  }(Type, getKeyFunc(defaultKeyfunc), options));
 
   return madeSingleton;
 
