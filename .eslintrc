@@ -6,13 +6,9 @@
       "jsx": true
     }
   },
-  "plugins": [
-    //"import"
-  ],
+  "plugins": [],
   "extends": [
-    "eslint:all"//,
-    //"plugin:import/errors",
-    //"plugin:import/warnings"
+    "google"
   ],
   "env": {
     "es6": true
