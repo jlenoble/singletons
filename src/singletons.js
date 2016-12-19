@@ -24,10 +24,8 @@ export const SingletonFactory = function SingletonFactory(
     postprocess: idFunc,
   }) {
   const madeSingleton = (function makeSingleton(_Type, _keyfunc, _options) {
-    const {preprocess, postprocess} = typeof _options === 'function' ? {
-      preprocess: _options,
-      postprocess: idFunc,
-    } : _options;
+    const preprocess = _options.preprocess || idFunc;
+    const postprocess = _options.postprocess || idFunc;    
 
     const instances = new Map();
     const keySymb = Symbol();

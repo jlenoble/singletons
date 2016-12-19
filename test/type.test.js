@@ -82,8 +82,8 @@ describe('Testing Singleton with Type initialization', function() {
       });
     }
 
-    const Singleton1 = SingletonFactory(Class, [{stem: 'ONE'}], preprocess);
-    const Singleton2 = SingletonFactory(Class, [{stem: 'TWO'}], preprocess);
+    const Singleton1 = SingletonFactory(Class, [{stem: 'ONE'}], {preprocess});
+    const Singleton2 = SingletonFactory(Class, [{stem: 'TWO'}], {preprocess});
 
     const c = new Class();
     expect(Singleton1.key(c)).to.equal('ONE1');

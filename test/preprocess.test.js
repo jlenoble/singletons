@@ -4,14 +4,18 @@ import signature from 'sig';
 
 describe('Testing preprocess option', function() {
 
-  it(`Testing with SingletonFactory(Class, ['literal'], function(args) {
-    return args.map(arg => 'pre_' + arg);
+  it(`Testing with SingletonFactory(Class, ['literal'], {
+    preprocess: function(args) {
+      return args.map(arg => 'pre_' + arg);
+    }
   })`, function() {
 
     class Class {constructor() {}}
 
-    const Singleton = SingletonFactory(Class, ['literal'], function(args) {
-      return args.map(arg => 'pre_' + arg);
+    const Singleton = SingletonFactory(Class, ['literal'], {
+      preprocess: function(args) {
+        return args.map(arg => 'pre_' + arg);
+      }
     });
 
     const s1 = Singleton('n1');
@@ -19,23 +23,8 @@ describe('Testing preprocess option', function() {
 
   });
 
-  it(`Testing with SingletonFactory(Class, ['object'], function(args) {
-    return args.map(arg => {
-      if (Singleton.get(arg)) {
-        return arg;
-      }
-      if (arg instanceof N) {
-        return arg.n + 10;
-      }
-      return arg;
-    });
-  })`, function() {
-
-    class N {constructor(n) {
-      this.n = n;
-    }}
-
-    const Singleton = SingletonFactory(N, ['literal'], function(args) {
+  it(`Testing with SingletonFactory(Class, ['object'], {
+    preprocess: function(args) {
       return args.map(arg => {
         if (Singleton.get(arg)) {
           return arg;
@@ -45,6 +34,25 @@ describe('Testing preprocess option', function() {
         }
         return arg;
       });
+    }
+  })`, function() {
+
+    class N {constructor(n) {
+      this.n = n;
+    }}
+
+    const Singleton = SingletonFactory(N, ['literal'], {
+      preprocess: function(args) {
+        return args.map(arg => {
+          if (Singleton.get(arg)) {
+            return arg;
+          }
+          if (arg instanceof N) {
+            return arg.n + 10;
+          }
+          return arg;
+        });
+      }
     });
 
     const s1 = Singleton(1); // No preprocessing

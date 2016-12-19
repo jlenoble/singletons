@@ -362,14 +362,15 @@ describe(`Testing README.md examples`, function() {
         (str, chunk) => str + chunk);}
     }
 
-    const Singleton = SingletonFactory(Class, [{type: 'literal', rest: true}],
-    function(args) {
-      return args.map(arg => {
-        if (arg.chunk) {
-          return arg.chunk;
-        }
-        return arg;
-      });
+    const Singleton = SingletonFactory(Class, [{type: 'literal', rest: true}], {
+      preprocess: function(args) {
+        return args.map(arg => {
+          if (arg.chunk) {
+            return arg.chunk;
+          }
+          return arg;
+        });
+      }
     });
     const refSingleton = SingletonFactory(Class,
       [{type: 'literal', rest: true}]);
