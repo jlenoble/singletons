@@ -1,11 +1,11 @@
 import {expect} from 'chai';
 import {SingletonFactory} from '../src/singletons';
 
-describe('Testing Singleton.get', function() {
-
-  it(`Testing with SingletonFactory(Class, ['object'])`, function() {
-
-    class Class {constructor() {}}
+describe('Testing Singleton.get', function () {
+  it(`Testing with SingletonFactory(Class, ['object'])`, function () {
+    class Class {
+      constructor () {}
+    }
 
     const Singleton = SingletonFactory(Class, ['object']);
 
@@ -33,12 +33,12 @@ describe('Testing Singleton.get', function() {
 
     expect(s1).not.to.equal(s3);
     expect(s2).not.to.equal(s3);
-
   });
 
-  it(`Testing with SingletonFactory(Class, ['literal'])`, function() {
-
-    class Class {constructor() {}}
+  it(`Testing with SingletonFactory(Class, ['literal'])`, function () {
+    class Class {
+      constructor () {}
+    }
 
     const Singleton = SingletonFactory(Class, ['literal']);
 
@@ -66,12 +66,12 @@ describe('Testing Singleton.get', function() {
 
     expect(s1).not.to.equal(s3);
     expect(s2).not.to.equal(s3);
-
   });
 
-  it(`Testing with SingletonFactory(Class, [{property: 'id'}])`, function() {
-
-    class Class {constructor() {}}
+  it(`Testing with SingletonFactory(Class, [{property: 'id'}])`, function () {
+    class Class {
+      constructor () {}
+    }
 
     const Singleton = SingletonFactory(Class, [{property: 'id'}]);
 
@@ -99,12 +99,12 @@ describe('Testing Singleton.get', function() {
 
     expect(s1).not.to.equal(s3);
     expect(s2).not.to.equal(s3);
-
   });
 
-  it(`Testing with SingletonFactory(Class, ['array'])`, function() {
-
-    class Class {constructor() {}}
+  it(`Testing with SingletonFactory(Class, ['array'])`, function () {
+    class Class {
+      constructor () {}
+    }
 
     const Singleton = SingletonFactory(Class, ['array']);
 
@@ -133,12 +133,12 @@ describe('Testing Singleton.get', function() {
 
     expect(s1).not.to.equal(s3);
     expect(s2).not.to.equal(s3);
-
   });
 
-  it(`Testing with SingletonFactory(Class, ['set'])`, function() {
-
-    class Class {constructor() {}}
+  it(`Testing with SingletonFactory(Class, ['set'])`, function () {
+    class Class {
+      constructor () {}
+    }
 
     const Singleton = SingletonFactory(Class, ['set']);
 
@@ -167,7 +167,5 @@ describe('Testing Singleton.get', function() {
 
     expect(s1).not.to.equal(s3);
     expect(s2).not.to.equal(s3);
-
   });
-
 });

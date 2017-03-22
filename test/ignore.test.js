@@ -1,11 +1,11 @@
 import {expect} from 'chai';
 import {SingletonFactory} from '../src/singletons';
 
-describe('Testing Singleton ignore type', function() {
-
-  it(`Testing with SingletonFactory(Class, ['object', 'ignore'])`, function() {
-
-    class Class {constructor() {}}
+describe('Testing Singleton ignore type', function () {
+  it(`Testing with SingletonFactory(Class, ['object', 'ignore'])`, function () {
+    class Class {
+      constructor () {}
+    }
 
     const Singleton = SingletonFactory(Class, ['object', 'ignore']);
 
@@ -33,19 +33,19 @@ describe('Testing Singleton ignore type', function() {
 
     expect(s1).not.to.equal(s3);
     expect(s2).not.to.equal(s3);
-
   });
 
   it(`Testing with SingletonFactory(Class, [{
     type: 'array',
     sub: ['object', 'object', 'ignore', 'object']
-  }])`, function() {
-
-    class Class {constructor() {}}
+  }])`, function () {
+    class Class {
+      constructor () {}
+    }
 
     const Singleton = SingletonFactory(Class, [{
       type: 'array',
-      sub: ['object', 'object', 'ignore', 'object']
+      sub: ['object', 'object', 'ignore', 'object'],
     }]);
 
     const o1 = {id: 1};
@@ -73,7 +73,5 @@ describe('Testing Singleton ignore type', function() {
 
     expect(s1).not.to.equal(s3);
     expect(s2).not.to.equal(s3);
-
   });
-
 });

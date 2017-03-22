@@ -1,6 +1,6 @@
 import keyFunc from 'keyfunc';
 
-const getKeyFunc = function getKeyFunc(defaultKeyfunc) {
+const getKeyFunc = function (defaultKeyfunc) {
   let keyfunc = defaultKeyfunc;
 
   if (typeof keyfunc !== 'function') {
@@ -18,18 +18,18 @@ keys from arguments, or an array of hints`);
 
 const idFunc = args => args;
 
-export const SingletonFactory = function SingletonFactory(
+export const SingletonFactory = function (
   Type, defaultKeyfunc = obj => obj.toString(), options = {
     preprocess: idFunc,
     postprocess: idFunc,
   }) {
-  const madeSingleton = (function makeSingleton(_Type, _keyfunc, _options) {
+  const madeSingleton = (function (_Type, _keyfunc, _options) {
     const preprocess = _options.preprocess || idFunc;
     const postprocess = _options.postprocess || idFunc;
 
     const instances = new Map();
     const keySymb = Symbol();
-    const Singleton = function Singleton(..._args) {
+    const Singleton = function (..._args) {
       const args = preprocess(_args);
 
       const key = Singleton.key(...args);
@@ -53,10 +53,10 @@ export const SingletonFactory = function SingletonFactory(
 
       return _keyfunc(arg0, ...args);
     };
-    Singleton.singleton = function singleton(_key) {
+    Singleton.singleton = function (_key) {
       return instances.get(_key);
     };
-    Singleton.get = function get(...args) {
+    Singleton.get = function (...args) {
       return instances.get(Singleton.key(...args));
     };
 

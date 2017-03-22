@@ -2,18 +2,18 @@ import {expect} from 'chai';
 import signature from 'sig';
 import {SingletonFactory} from '../src/singletons';
 
-describe('Testing Singleton with property', function() {
-
+describe('Testing Singleton with property', function () {
   it(`Calling SingletonFactory(Class, [{
     type: 'property:object',
     property: 'data'
-  }])`, function() {
-
-    class Class {constructor() {}}
+  }])`, function () {
+    class Class {
+      constructor () {}
+    }
 
     const Singleton = SingletonFactory(Class, [{
       type: 'property:object',
-      property: 'data'
+      property: 'data',
     }]);
 
     const o1 = {};
@@ -30,19 +30,19 @@ describe('Testing Singleton with property', function() {
     expect(s1).not.to.equal(s2);
     expect(s1).to.equal(s3);
     expect(Singleton.key(s1)).to.equal('1');
-
   });
 
   it(`Calling SingletonFactory(Class, [{
     type: 'property:literal',
     property: 'id'
-  }])`, function() {
-
-    class Class {constructor() {}}
+  }])`, function () {
+    class Class {
+      constructor () {}
+    }
 
     const Singleton = SingletonFactory(Class, [{
       type: 'property:literal',
-      property: 'id'
+      property: 'id',
     }]);
 
     const c1 = {id: 1};
@@ -55,20 +55,21 @@ describe('Testing Singleton with property', function() {
 
     expect(s1).not.to.equal(s2);
     expect(s1).to.equal(s3);
-
   });
 
   it(`Calling SingletonFactory(Class, [{
     type: 'property:property:id',
     property: 'data'
-  }])`, function() {
+  }])`, function () {
     // Checks allegation that this option works, but use is discouraged
 
-    class Class {constructor() {}}
+    class Class {
+      constructor () {}
+    }
 
     const Singleton = SingletonFactory(Class, [{
       type: 'property:property:id',
-      property: 'data'
+      property: 'data',
     }]);
 
     const o1 = {id: 1};
@@ -86,20 +87,21 @@ describe('Testing Singleton with property', function() {
     expect(s1).to.equal(s3);
     expect(Singleton.key(s1)).not.to.equal('1');
     expect(Singleton.key(s1)).to.equal(signature(1));
-
   });
 
   it(`Calling SingletonFactory(Class, [{
     type: 'property:property:id:id',
     property: 'data'
-  }])`, function() {
+  }])`, function () {
     // Checking that this option doesn't work as intended
 
-    class Class {constructor() {}}
+    class Class {
+      constructor () {}
+    }
 
     const Singleton = SingletonFactory(Class, [{
       type: 'property:property:id:id',
-      property: 'data'
+      property: 'data',
     }]);
 
     const o1 = {id: {id: 1}};
@@ -117,19 +119,19 @@ describe('Testing Singleton with property', function() {
     expect(s1).to.equal(s3);
     expect(Singleton.key(s1)).not.to.equal(signature({id: 1}));
     expect(Singleton.key(s1)).to.equal(signature(1));
-
   });
 
   it(`Calling SingletonFactory(Class, [{
     type: 'property:array',
     property: 'data'
-  }])`, function() {
-
-    class Class {constructor() {}}
+  }])`, function () {
+    class Class {
+      constructor () {}
+    }
 
     const Singleton = SingletonFactory(Class, [{
       type: 'property:array',
-      property: 'data'
+      property: 'data',
     }]);
 
     const c1 = {id: 1};
@@ -142,19 +144,19 @@ describe('Testing Singleton with property', function() {
 
     expect(s1).not.to.equal(s2);
     expect(s1).to.equal(s3);
-
   });
 
   it(`Calling SingletonFactory(Class, [{
     type: 'property:set',
     property: 'data'
-  }])`, function() {
-
-    class Class {constructor() {}}
+  }])`, function () {
+    class Class {
+      constructor () {}
+    }
 
     const Singleton = SingletonFactory(Class, [{
       type: 'property:set',
-      property: 'data'
+      property: 'data',
     }]);
 
     const c1 = {id: 1};
@@ -169,7 +171,5 @@ describe('Testing Singleton with property', function() {
     expect(s1).to.equal(s2);
     expect(s1).to.equal(s3);
     expect(s1).not.to.equal(s4);
-
   });
-
 });

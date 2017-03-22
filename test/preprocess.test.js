@@ -2,25 +2,24 @@ import {expect} from 'chai';
 import {SingletonFactory} from '../src/singletons';
 import signature from 'sig';
 
-describe('Testing preprocess option', function() {
-
+describe('Testing preprocess option', function () {
   it(`Testing with SingletonFactory(Class, ['literal'], {
     preprocess: function(args) {
       return args.map(arg => 'pre_' + arg);
     }
-  })`, function() {
-
-    class Class {constructor() {}}
+  })`, function () {
+    class Class {
+      constructor () {}
+    }
 
     const Singleton = SingletonFactory(Class, ['literal'], {
-      preprocess: function(args) {
+      preprocess: function (args) {
         return args.map(arg => 'pre_' + arg);
-      }
+      },
     });
 
     const s1 = Singleton('n1');
     expect(Singleton.key(s1)).to.equal(signature('pre_n1'));
-
   });
 
   it(`Testing with SingletonFactory(Class, ['object'], {
@@ -35,14 +34,15 @@ describe('Testing preprocess option', function() {
         return arg;
       });
     }
-  })`, function() {
-
-    class N {constructor(n) {
-      this.n = n;
-    }}
+  })`, function () {
+    class N {
+      constructor (n) {
+        this.n = n;
+      }
+    }
 
     const Singleton = SingletonFactory(N, ['literal'], {
-      preprocess: function(args) {
+      preprocess: function (args) {
         return args.map(arg => {
           if (Singleton.get(arg)) {
             return arg;
@@ -52,7 +52,7 @@ describe('Testing preprocess option', function() {
           }
           return arg;
         });
-      }
+      },
     });
 
     const s1 = Singleton(1); // No preprocessing
@@ -65,7 +65,5 @@ describe('Testing preprocess option', function() {
     const s3 = Singleton(n);
     expect(Singleton.key(s3)).not.to.equal(signature(n));
     expect(Singleton.key(s3)).to.equal(signature(12));
-
   });
-
 });

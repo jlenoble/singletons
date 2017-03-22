@@ -1,11 +1,11 @@
 import {expect} from 'chai';
 import {SingletonFactory} from '../src/singletons';
 
-describe('Testing Singleton with array', function() {
-
-  it(`Calling SingletonFactory(Class, ['array:object'])`, function() {
-
-    class Class {constructor() {}}
+describe('Testing Singleton with array', function () {
+  it(`Calling SingletonFactory(Class, ['array:object'])`, function () {
+    class Class {
+      constructor () {}
+    }
 
     const Singleton = SingletonFactory(Class, ['array:object']);
 
@@ -19,12 +19,12 @@ describe('Testing Singleton with array', function() {
 
     expect(s1).not.to.equal(s2);
     expect(s1).to.equal(s3);
-
   });
 
-  it(`Calling SingletonFactory(Class, ['array:literal'])`, function() {
-
-    class Class {constructor() {}}
+  it(`Calling SingletonFactory(Class, ['array:literal'])`, function () {
+    class Class {
+      constructor () {}
+    }
 
     const Singleton = SingletonFactory(Class, ['array:literal']);
 
@@ -37,12 +37,14 @@ describe('Testing Singleton with array', function() {
 
     expect(s1).not.to.equal(s2);
     expect(s1).to.equal(s3);
-
   });
 
-  it(`Calling SingletonFactory(Class, ['array:property:id'])`, function() {
-
-    class Class {constructor(id) {this.id = id}}
+  it(`Calling SingletonFactory(Class, ['array:property:id'])`, function () {
+    class Class {
+      constructor (id) {
+        this.id = id;
+      }
+    }
 
     const Singleton = SingletonFactory(Class, ['array:property:id']);
 
@@ -55,12 +57,12 @@ describe('Testing Singleton with array', function() {
 
     expect(s1).not.to.equal(s2);
     expect(s1).to.equal(s3);
-
   });
 
-  it(`Calling SingletonFactory(Class, ['array:array'])`, function() {
-
-    class Class {constructor() {}}
+  it(`Calling SingletonFactory(Class, ['array:array'])`, function () {
+    class Class {
+      constructor () {}
+    }
 
     const Singleton = SingletonFactory(Class, ['array:array']);
 
@@ -74,12 +76,12 @@ describe('Testing Singleton with array', function() {
 
     expect(s1).not.to.equal(s2);
     expect(s1).to.equal(s3);
-
   });
 
-  it(`Calling SingletonFactory(Class, ['array:set'])`, function() {
-
-    class Class {constructor() {}}
+  it(`Calling SingletonFactory(Class, ['array:set'])`, function () {
+    class Class {
+      constructor () {}
+    }
 
     const Singleton = SingletonFactory(Class, ['array:set']);
 
@@ -93,16 +95,14 @@ describe('Testing Singleton with array', function() {
 
     expect(s1).to.equal(s2);
     expect(s1).to.equal(s3);
-
   });
-
 });
 
-describe('Testing Singleton with set', function() {
-
-  it(`Calling SingletonFactory(Class, ['set:object'])`, function() {
-
-    class Class {constructor() {}}
+describe('Testing Singleton with set', function () {
+  it(`Calling SingletonFactory(Class, ['set:object'])`, function () {
+    class Class {
+      constructor () {}
+    }
 
     const Singleton = SingletonFactory(Class, ['set:object']);
 
@@ -116,12 +116,12 @@ describe('Testing Singleton with set', function() {
 
     expect(s1).to.equal(s2);
     expect(s1).to.equal(s3);
-
   });
 
-  it(`Calling SingletonFactory(Class, ['set:literal'])`, function() {
-
-    class Class {constructor() {}}
+  it(`Calling SingletonFactory(Class, ['set:literal'])`, function () {
+    class Class {
+      constructor () {}
+    }
 
     const Singleton = SingletonFactory(Class, ['set:literal']);
 
@@ -134,12 +134,14 @@ describe('Testing Singleton with set', function() {
 
     expect(s1).to.equal(s2);
     expect(s1).to.equal(s3);
-
   });
 
-  it(`Calling SingletonFactory(Class, ['set:property:id'])`, function() {
-
-    class Class {constructor(id) {this.id = id}}
+  it(`Calling SingletonFactory(Class, ['set:property:id'])`, function () {
+    class Class {
+      constructor (id) {
+        this.id = id;
+      }
+    }
 
     const Singleton = SingletonFactory(Class, ['set:property:id']);
 
@@ -152,12 +154,12 @@ describe('Testing Singleton with set', function() {
 
     expect(s1).to.equal(s2);
     expect(s1).to.equal(s3);
-
   });
 
-  it(`Calling SingletonFactory(Class, ['set:array'])`, function() {
-
-    class Class {constructor() {}}
+  it(`Calling SingletonFactory(Class, ['set:array'])`, function () {
+    class Class {
+      constructor () {}
+    }
 
     const Singleton = SingletonFactory(Class, ['set:array']);
 
@@ -171,12 +173,12 @@ describe('Testing Singleton with set', function() {
 
     expect(s1).to.equal(s2);
     expect(s1).to.equal(s3);
-
   });
 
-  it(`Calling SingletonFactory(Class, ['set:set'])`, function() {
-
-    class Class {constructor() {}}
+  it(`Calling SingletonFactory(Class, ['set:set'])`, function () {
+    class Class {
+      constructor () {}
+    }
 
     const Singleton = SingletonFactory(Class, ['set:set']);
 
@@ -190,7 +192,5 @@ describe('Testing Singleton with set', function() {
 
     expect(s1).to.equal(s2);
     expect(s1).to.equal(s3);
-
   });
-
 });

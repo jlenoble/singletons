@@ -1,24 +1,24 @@
 import {expect} from 'chai';
 import {SingletonFactory} from '../src/singletons';
 
-describe(`Testing README.md examples`, function() {
-
-  before(function() {
-    this.Class = class Class {constructor() {}};
+describe(`Testing README.md examples`, function () {
+  before(function () {
+    this.Class = class Class {
+      constructor () {}
+    };
   });
 
-  it('SingletonFactory syntax example', function() {
-
+  it('SingletonFactory syntax example', function () {
     const Singleton = SingletonFactory(
       this.Class, // Constructor for the singletons
       [
         'object', // First argument must be an object matched strictly
         'literal', // Second argument can be anything matched literally
-        {property: 'color'} , // Third argument and all subsequent ones can be
+        {property: 'color'}, // Third argument and all subsequent ones can be
         // anything matched literally from their property 'id' downwards
         'array', // Fourth argument is an array of 'object'
         'set', // Fifth argument is a set of 'object'
-        'ignore' // Sixth argument is ignored
+        'ignore', // Sixth argument is ignored
       ]
     );
 
@@ -30,15 +30,13 @@ describe(`Testing README.md examples`, function() {
 
     expect(s1).to.equal(s2);
     expect(s1).to.be.instanceof(this.Class);
-
   });
 
-  it('Function key(...args) example', function() {
-
+  it('Function key(...args) example', function () {
     const Singleton = SingletonFactory(
       this.Class,
       [
-        'object'
+        'object',
       ]
     );
 
@@ -46,15 +44,13 @@ describe(`Testing README.md examples`, function() {
     expect(Singleton.key(new this.Class())).to.equal('2');
     expect(Singleton.key(console)).to.equal('1');
     expect(Singleton.key(new this.Class())).to.equal('3');
-
   });
 
-  it('Function singleton(key) example', function() {
-
+  it('Function singleton(key) example', function () {
     const Singleton = SingletonFactory(
       this.Class,
       [
-        'object'
+        'object',
       ]
     );
 
@@ -62,58 +58,52 @@ describe(`Testing README.md examples`, function() {
 
     expect(Singleton.get(console)).to.equal(s1);
     expect(Singleton.get(Number)).to.be.undefined;
-
   });
 
-  it('Function get(...args) example', function() {
-
+  it('Function get(...args) example', function () {
     const Singleton = SingletonFactory(
       this.Class,
       [
-        'object'
+        'object',
       ]
     );
 
     const s1 = Singleton(console);
 
     expect(Singleton.singleton('1')).to.equal(s1);
-
   });
 
-  it('Options example', function() {
-
+  it('Options example', function () {
     const Singleton = SingletonFactory(this.Class, [
       {
-        stem: 'first'
+        stem: 'first',
       },
       {
         stem: 'second',
         type: 'literal',
-        rest: true
+        rest: true,
       },
       {
         stem: 'third',
-        property: 'color'
+        property: 'color',
       },
       {
         stem: 'fourth',
-        type: 'array'
+        type: 'array',
       },
       {
         stem: 'fifth',
-        type: 'set'
-      }
+        type: 'set',
+      },
     ]);
 
     const obj = {id: 1};
     expect(/first1_second[0-9a-f]{40}_third[0-9a-f]{40}_fourth[0-9a-f]{40}_fifth[0-9a-f]{40}_second[0-9a-f]{40}/
       .test(Singleton.key(console, 'log', {color: 'red'}, [console, obj],
       [obj, console], 'dummy'))).to.be.true;
-
   });
 
-  it(`'object' option example`, function() {
-
+  it(`'object' option example`, function () {
     const Singleton = SingletonFactory(this.Class, ['object']);
 
     const option1 = {color: 'red'};
@@ -129,11 +119,9 @@ describe(`Testing README.md examples`, function() {
     expect(s1).to.equal(Singleton(option1));
     expect(s1).not.to.equal(Singleton({color: 'red'}));
     expect(s1).not.to.equal(Singleton({color: 'red', size: 'Huge'}));
-
   });
 
-  it(`'literal' option example`, function() {
-
+  it(`'literal' option example`, function () {
     const Singleton = SingletonFactory(this.Class, ['literal']);
 
     const option1 = {color: 'red'};
@@ -149,11 +137,9 @@ describe(`Testing README.md examples`, function() {
     expect(s1).to.equal(Singleton(option1));
     expect(s1).to.equal(Singleton({color: 'red'}));
     expect(s1).not.to.equal(Singleton({color: 'red', size: 'Huge'}));
-
   });
 
-  it(`'property' option example`, function() {
-
+  it(`'property' option example`, function () {
     const Singleton = SingletonFactory(this.Class, [{property: 'color'}]);
 
     const option1 = {color: 'red'};
@@ -169,11 +155,9 @@ describe(`Testing README.md examples`, function() {
     expect(s1).to.equal(Singleton(option1));
     expect(s1).to.equal(Singleton({color: 'red'}));
     expect(s1).to.equal(Singleton({color: 'red', size: 'Huge'}));
-
   });
 
-  it(`'array' option example`, function() {
-
+  it(`'array' option example`, function () {
     const Singleton = SingletonFactory(this.Class, ['array']);
 
     const option1 = {color: 'red'};
@@ -186,11 +170,9 @@ describe(`Testing README.md examples`, function() {
 
     expect(s1).not.to.equal(s2);
     expect(s1).to.equal(s3);
-
   });
 
-  it(`'set' option example`, function() {
-
+  it(`'set' option example`, function () {
     const Singleton = SingletonFactory(this.Class, ['set']);
 
     const option1 = {color: 'red'};
@@ -203,11 +185,9 @@ describe(`Testing README.md examples`, function() {
 
     expect(s1).to.equal(s2);
     expect(s1).to.equal(s3);
-
   });
 
-  it(`Special case: Singleton(singleton)`, function() {
-
+  it(`Special case: Singleton(singleton)`, function () {
     const Singleton = SingletonFactory(this.Class, ['object']);
 
     const option1 = {color: 'red'};
@@ -218,10 +198,9 @@ describe(`Testing README.md examples`, function() {
 
     expect(s1).to.equal(s2);
     expect(s1).to.equal(s3);
-
   });
 
-  it('Mixed arrays', function() {
+  it('Mixed arrays', function () {
     class Class {}
 
     const brokenSingleton = SingletonFactory(Class,
@@ -230,7 +209,7 @@ describe(`Testing README.md examples`, function() {
     const goodSingleton = SingletonFactory(Class, [{
       type: 'array', // Mandatory
       sub: ['object', 'literal'],
-      rest: true // Expects a list of mixed arrays, not only a single one
+      rest: true, // Expects a list of mixed arrays, not only a single one
     }]);
 
     const o1 = {name: 1};
@@ -256,7 +235,7 @@ describe(`Testing README.md examples`, function() {
       [{name: 1}, 'name'], [o2, 'name'], [o3, 'name']));
   });
 
-  it(`Mixed properties`, function() {
+  it(`Mixed properties`, function () {
     class Class {}
 
     const brokenSingleton = SingletonFactory(Class,
@@ -265,7 +244,7 @@ describe(`Testing README.md examples`, function() {
     const goodSingleton = SingletonFactory(Class, [{
       property: 'data', // Mandatory
       sub: {type: 'array', sub: ['object', 'literal']},
-      rest: true // Expects a list of mixed arrays, not only a single one
+      rest: true, // Expects a list of mixed arrays, not only a single one
     }]);
 
     const o1 = {name: 1};
@@ -290,9 +269,11 @@ describe(`Testing README.md examples`, function() {
       {data: [o2, 'name']}, {data: [o3, 'name']}));
   });
 
-  it(`Deep properties`, function() {
+  it(`Deep properties`, function () {
     class Class {
-      constructor(thought) {this.thought = thought;}
+      constructor (thought) {
+        this.thought = thought;
+      }
     }
 
     const cumbersomeSingleton = SingletonFactory(Class, [{
@@ -302,10 +283,10 @@ describe(`Testing README.md examples`, function() {
         sub: {
           property: 'brain',
           sub: {
-            property: 'thought'
-          }
-        }
-      }
+            property: 'thought',
+          },
+        },
+      },
     }]);
     const straightSingleton = SingletonFactory(Class,
       [{property: 'humanity:man:brain:thought'}]);
@@ -326,16 +307,16 @@ describe(`Testing README.md examples`, function() {
       straightSingleton.key(o));
   });
 
-  it(`Unordered lists`, function() {
+  it(`Unordered lists`, function () {
     class Person {
-      constructor(firstname, lastname) {
+      constructor (firstname, lastname) {
         this.firstname = firstname;
         this.lastname = lastname;
       }
     }
 
     class Family {
-      constructor(...members) {
+      constructor (...members) {
         this.members = members.map(member => new Person(...member));
       }
     }
@@ -356,21 +337,23 @@ describe(`Testing README.md examples`, function() {
     expect(family).to.equal(uFamily(info3, info2, info1));
   });
 
-  it('Preprocessing arguments', function() {
+  it('Preprocessing arguments', function () {
     class Class {
-      constructor(...chunks) {this.chunk = ['', ...chunks].reduce(
-        (str, chunk) => str + chunk);}
+      constructor (...chunks) {
+        this.chunk = ['', ...chunks].reduce(
+        (str, chunk) => str + chunk);
+      }
     }
 
     const Singleton = SingletonFactory(Class, [{type: 'literal', rest: true}], {
-      preprocess: function(args) {
+      preprocess: function (args) {
         return args.map(arg => {
           if (arg.chunk) {
             return arg.chunk;
           }
           return arg;
         });
-      }
+      },
     });
     const refSingleton = SingletonFactory(Class,
       [{type: 'literal', rest: true}]);
@@ -397,7 +380,7 @@ describe(`Testing README.md examples`, function() {
     expect(t3).not.to.equal(t4);
   });
 
-  it(`Postprocessing instance`, function() {
+  it(`Postprocessing instance`, function () {
     class Person {
       constructor (firstname, lastname, options) {
         this.firstname = firstname;
@@ -406,13 +389,16 @@ describe(`Testing README.md examples`, function() {
       }
     }
 
-    const Inhabitant = SingletonFactory(Person, ['literal', 'literal', 'ignore'], {
-      postprocess: function (instance, args) {
+    const Inhabitant = SingletonFactory(Person, [
+      'literal', 'literal', 'ignore',
+    ], {
+      postprocess: function (_instance, args) {
+        const instance = _instance;
         if (args && args[2] && args[2].where) {
           instance.where = args[2].where;
         }
         return instance;
-      }
+      },
     });
 
     const annie = new Inhabitant('Annie', 'Smith', {where: 'Los Angeles'});
@@ -423,5 +409,4 @@ describe(`Testing README.md examples`, function() {
     expect(annie).to.equal(Inhabitant('Annie', 'Smith', {where: 'New York'}));
     expect(annie.where).to.equal('New York');
   });
-
 });

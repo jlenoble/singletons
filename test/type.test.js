@@ -1,11 +1,11 @@
 import {expect} from 'chai';
 import {SingletonFactory} from '../src/singletons';
 
-describe('Testing Singleton with Type initialization', function() {
-
-  it(`Calling Singleton with a Type object`, function() {
-
-    class Class {constructor() {}}
+describe('Testing Singleton with Type initialization', function () {
+  it(`Calling Singleton with a Type object`, function () {
+    class Class {
+      constructor () {}
+    }
 
     const Singleton = SingletonFactory(Class, ['object']);
 
@@ -23,12 +23,12 @@ describe('Testing Singleton with Type initialization', function() {
     expect(s1).to.equal(Singleton(s1));
     expect(s2).to.equal(Singleton(c2));
     expect(s2).to.equal(Singleton(s2));
-
   });
 
-  it(`Calling two different Singletons with same Type object`, function() {
-
-    class Class {constructor() {}}
+  it(`Calling two different Singletons with same Type object`, function () {
+    class Class {
+      constructor () {}
+    }
 
     const Singleton1 = SingletonFactory(Class, [{stem: 'ONE'}]);
     const Singleton2 = SingletonFactory(Class, [{stem: 'TWO'}]);
@@ -70,10 +70,12 @@ describe('Testing Singleton with Type initialization', function() {
     expect(Singleton2(t2)).to.equal(Singleton2(t));
   });
 
-  it(`Calling two different Singletons with [same Type object]`, function() {
+  it(`Calling two different Singletons with [same Type object]`, function () {
+    class Class {
+      constructor () {}
+    }
 
-    class Class {constructor() {}}
-    function preprocess(args) {
+    function preprocess (args) {
       return args.map(arg => {
         if (Array.isArray(arg)) {
           return arg[0];
@@ -121,5 +123,4 @@ describe('Testing Singleton with Type initialization', function() {
     expect(Singleton2([s2])).to.equal(Singleton2(s));
     expect(Singleton2([t2])).to.equal(Singleton2([t]));
   });
-
 });

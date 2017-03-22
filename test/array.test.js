@@ -1,11 +1,11 @@
 import {expect} from 'chai';
 import {SingletonFactory} from '../src/singletons';
 
-describe('Testing Singleton with array', function() {
-
-  it(`Calling SingletonFactory(Class, ['array'])`, function() {
-
-    class Class {constructor() {}}
+describe('Testing Singleton with array', function () {
+  it(`Calling SingletonFactory(Class, ['array'])`, function () {
+    class Class {
+      constructor () {}
+    }
 
     const Singleton = SingletonFactory(Class, ['array']);
 
@@ -19,12 +19,12 @@ describe('Testing Singleton with array', function() {
 
     expect(s1).not.to.equal(s2);
     expect(s1).to.equal(s3);
-
   });
 
-  it(`Calling SingletonFactory(Class, ['set'])`, function() {
-
-    class Class {constructor() {}}
+  it(`Calling SingletonFactory(Class, ['set'])`, function () {
+    class Class {
+      constructor () {}
+    }
 
     const Singleton = SingletonFactory(Class, ['set']);
 
@@ -38,7 +38,5 @@ describe('Testing Singleton with array', function() {
 
     expect(s1).to.equal(s2);
     expect(s1).to.equal(s3);
-
   });
-
 });

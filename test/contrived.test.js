@@ -1,16 +1,18 @@
 import {expect} from 'chai';
 import {SingletonFactory} from '../src/singletons';
 
-describe('Testing Singleton with contrived options', function() {
-
+describe('Testing Singleton with contrived options', function () {
   it(`Calling SingletonFactory(Class, [
     'array:literal', {type: 'set:set', rest: true}, {property: 'name'}
-  ])`, function() {
-
-    class Class {constructor(name) {this.name = name;}}
+  ])`, function () {
+    class Class {
+      constructor (name) {
+        this.name = name;
+      }
+    }
 
     const Singleton = SingletonFactory(Class, [
-      'array:literal', {type: 'set:set', rest: true}, {property: 'name'}
+      'array:literal', {type: 'set:set', rest: true}, {property: 'name'},
     ]);
 
     const c1 = new Class('Adele');
@@ -60,7 +62,5 @@ describe('Testing Singleton with contrived options', function() {
       c3,
       [[c1], [c3, c2]]
     ));
-
   });
-
 });

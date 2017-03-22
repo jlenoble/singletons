@@ -15,11 +15,15 @@
   },
   "rules": {
     "arrow-parens": ["error", "as-needed"],
+    "func-names": ["error", "never"],
     "indent": ["error", 2],
-    "no-magic-numbers": ["off"],
+    "max-len": ["error", {"ignoreRegExpLiterals": true}],
+    "new-cap": ["off"],
+    "no-invalid-this": ["off"],
     "no-param-reassign": ["error", {"props": true}],
     "one-var": ["error", "never"],
-    "symbol-description": ["off"],
-    "quotes": ["error", "single"]
+    "quotes": ["error", "single", {"allowTemplateLiterals": true}],
+    "require-jsdoc": ["off"],
+    "space-before-function-paren": ["error", "always"]
   }
 }
