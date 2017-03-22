@@ -2,7 +2,7 @@
   "name": "singletons",
   "version": "0.7.0",
   "description": "Helps create and manage families of singletons based on customizable conditions",
-  "main": "index.js",
+  "main": "lib/singletons.js",
   "scripts": {
     "test": "gulp test"
   },
