@@ -584,4 +584,4 @@ annie.where === 'New York'; // true because of postprocessing, otherwise ignored
 
 singletons is [MIT licensed](./LICENSE).
 
-© 2016 [Jason Lenoble](mailto:jason.lenoble@gmail.com)
+© 2016-2017 [Jason Lenoble](mailto:jason.lenoble@gmail.com)
