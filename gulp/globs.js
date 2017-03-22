@@ -1,6 +1,6 @@
 import path from 'path';
 
-function join(...args) {
+function join (...args) {
   let len = args.length;
   let glob = args[len - 1];
 
@@ -16,6 +16,7 @@ function join(...args) {
 export const srcDir = 'src';
 export const testDir = 'test';
 export const buildDir = 'build';
+export const distDir = 'lib';
 
 export const apps = ['singletons'];
 export const bundleGlob = 'bundle.js';
@@ -31,7 +32,7 @@ export const testBuildGlob = join(buildDir, testGlob);
 export const allSrcGlob = srcGlob.concat(allTestGlob);
 export const allBuildGlob = srcBuildGlob.concat(testBuildGlob);
 
-export const bundleRootGlob = join(buildDir, srcDir, 'index.js');
-export const testBundleRootGlob = join(buildDir, testDir, 'singletons.test.js');
+export const bundleRootGlob = join(buildDir, srcDir, 'demo.js');
+export const testBundleRootGlob = join(buildDir, testDir, 'index.test.js');
 export const bundleBuildGlob = join(buildDir, bundleGlob);
 export const testBundleBuildGlob = join(buildDir, testBundleGlob);
