@@ -40,10 +40,10 @@ describe(`Testing README.md examples`, function () {
       ]
     );
 
-    expect(Singleton.key(console)).to.equal('1');
-    expect(Singleton.key(new this.Class())).to.equal('2');
-    expect(Singleton.key(console)).to.equal('1');
-    expect(Singleton.key(new this.Class())).to.equal('3');
+    expect(Singleton.key(console)).to.equal('o1');
+    expect(Singleton.key(new this.Class())).to.equal('o2');
+    expect(Singleton.key(console)).to.equal('o1');
+    expect(Singleton.key(new this.Class())).to.equal('o3');
   });
 
   it('Function singleton(key) example', function () {
@@ -70,37 +70,7 @@ describe(`Testing README.md examples`, function () {
 
     const s1 = Singleton(console);
 
-    expect(Singleton.singleton('1')).to.equal(s1);
-  });
-
-  it('Options example', function () {
-    const Singleton = SingletonFactory(this.Class, [
-      {
-        stem: 'first',
-      },
-      {
-        stem: 'second',
-        type: 'literal',
-        rest: true,
-      },
-      {
-        stem: 'third',
-        property: 'color',
-      },
-      {
-        stem: 'fourth',
-        type: 'array',
-      },
-      {
-        stem: 'fifth',
-        type: 'set',
-      },
-    ]);
-
-    const obj = {id: 1};
-    expect(/first1_second[0-9a-f]{40}_third[0-9a-f]{40}_fourth[0-9a-f]{40}_fifth[0-9a-f]{40}_second[0-9a-f]{40}/
-      .test(Singleton.key(console, 'log', {color: 'red'}, [console, obj],
-      [obj, console], 'dummy'))).to.be.true;
+    expect(Singleton.singleton('o1')).to.equal(s1);
   });
 
   it(`'object' option example`, function () {

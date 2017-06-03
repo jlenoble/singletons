@@ -29,7 +29,7 @@ describe('Testing Singleton with property', function () {
 
     expect(s1).not.to.equal(s2);
     expect(s1).to.equal(s3);
-    expect(Singleton.key(s1)).to.equal('1');
+    expect(Singleton.key(s1)).to.equal('o1');
   });
 
   it(`Calling SingletonFactory(Class, [{

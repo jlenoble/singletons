@@ -22,7 +22,7 @@ export const Arguments = [
     title1: `(console, 'log')`,
     args2: [console, 'info'],
     title2: `(console, 'info')`,
-    keyFunc: keyFunc({stem: 'logger'}, 'literal'),
+    keyFunc: keyFunc('object', 'literal'),
   },
   {
     args1: ['src/**/*.js'],
@@ -35,7 +35,10 @@ export const Arguments = [
     title1: 'babel',
     args2: [rename, {suffix: '-renamed'}],
     title2: `rename({suffix: '-renamed'})`,
-    keyFunc: keyFunc({stem: 'plugin'}, 'literal'),
+    keyFunc: keyFunc('object', {
+      type: 'literal',
+      optional: true,
+    }),
   },
 ];
 
@@ -43,27 +46,30 @@ export const Arguments2 = [
   {
     args1: [23],
     args2: [25],
-    keyFunc: ['literal', 'literal'],
+    keyFunc: ['literal'],
   },
   {
     args1: [console, 'log'],
     title1: `(console, 'log')`,
     args2: [console, 'info'],
     title2: `(console, 'info')`,
-    keyFunc: [{stem: 'logger'}, 'literal'],
+    keyFunc: ['object', 'literal'],
   },
   {
     args1: ['src/**/*.js'],
     title1: `'src/**/*.js'`,
     args2: ['test/**/*.js'],
     title2: `'test/**/*.js'`,
-    keyFunc: ['literal', 'literal'],
+    keyFunc: ['literal'],
   },
   {
     args1: [babel],
     title1: 'babel',
     args2: [rename, {suffix: '-renamed'}],
     title2: `rename({suffix: '-renamed'})`,
-    keyFunc: [{stem: 'plugin'}, 'literal'],
+    keyFunc: ['object', {
+      type: 'literal',
+      optional: true,
+    }],
   },
 ];

@@ -30,23 +30,23 @@ describe('Testing Singleton with Type initialization', function () {
       constructor () {}
     }
 
-    const Singleton1 = SingletonFactory(Class, [{stem: 'ONE'}]);
-    const Singleton2 = SingletonFactory(Class, [{stem: 'TWO'}]);
+    const Singleton1 = SingletonFactory(Class, ['object']);
+    const Singleton2 = SingletonFactory(Class, ['object']);
 
     const c = new Class();
-    expect(Singleton1.key(c)).to.equal('ONE1');
-    expect(Singleton2.key(c)).to.equal('TWO1');
+    expect(Singleton1.key(c)).to.equal('o1');
+    expect(Singleton2.key(c)).to.equal('o1');
 
     const s = Singleton1(c);
     expect(s).not.to.equal(c);
-    expect(Singleton1.key(s)).to.equal('ONE1');
-    expect(Singleton2.key(s)).to.equal('TWO2');
+    expect(Singleton1.key(s)).to.equal('o1');
+    expect(Singleton2.key(s)).to.equal('o2');
 
     const t = Singleton2(c);
     expect(t).not.to.equal(c);
     expect(t).not.to.equal(s);
-    expect(Singleton1.key(t)).to.equal('ONE2');
-    expect(Singleton2.key(t)).to.equal('TWO1');
+    expect(Singleton1.key(t)).to.equal('o2');
+    expect(Singleton2.key(t)).to.equal('o1');
 
     const s1 = Singleton1(s);
     expect(s1).to.equal(s);
@@ -56,13 +56,13 @@ describe('Testing Singleton with Type initialization', function () {
 
     const s2 = Singleton2(s);
     expect(s2).not.equal(s);
-    expect(Singleton1.key(s2)).to.equal('ONE3');
-    expect(Singleton2.key(s2)).to.equal('TWO2');
+    expect(Singleton1.key(s2)).to.equal('o3');
+    expect(Singleton2.key(s2)).to.equal('o2');
 
     const t1 = Singleton1(t);
     expect(t1).not.equal(t);
-    expect(Singleton1.key(t1)).to.equal('ONE2');
-    expect(Singleton2.key(t1)).to.equal('TWO3');
+    expect(Singleton1.key(t1)).to.equal('o2');
+    expect(Singleton2.key(t1)).to.equal('o3');
 
     expect(Singleton1(s1)).to.equal(Singleton1(s));
     expect(Singleton1(t1)).to.equal(Singleton1(t));
@@ -84,23 +84,23 @@ describe('Testing Singleton with Type initialization', function () {
       });
     }
 
-    const Singleton1 = SingletonFactory(Class, [{stem: 'ONE'}], {preprocess});
-    const Singleton2 = SingletonFactory(Class, [{stem: 'TWO'}], {preprocess});
+    const Singleton1 = SingletonFactory(Class, ['object'], {preprocess});
+    const Singleton2 = SingletonFactory(Class, ['object'], {preprocess});
 
     const c = new Class();
-    expect(Singleton1.key(c)).to.equal('ONE1');
-    expect(Singleton2.key(c)).to.equal('TWO1');
+    expect(Singleton1.key(c)).to.equal('o1');
+    expect(Singleton2.key(c)).to.equal('o1');
 
     const s = Singleton1(c);
     expect(s).not.to.equal(c);
-    expect(Singleton1.key(s)).to.equal('ONE1');
-    expect(Singleton2.key(s)).to.equal('TWO2');
+    expect(Singleton1.key(s)).to.equal('o1');
+    expect(Singleton2.key(s)).to.equal('o2');
 
     const t = Singleton2(c);
     expect(t).not.to.equal(c);
     expect(t).not.to.equal(s);
-    expect(Singleton1.key(t)).to.equal('ONE2');
-    expect(Singleton2.key(t)).to.equal('TWO1');
+    expect(Singleton1.key(t)).to.equal('o2');
+    expect(Singleton2.key(t)).to.equal('o1');
 
     const s1 = Singleton1([s]);
     expect(s1).to.equal(s);
@@ -110,13 +110,13 @@ describe('Testing Singleton with Type initialization', function () {
 
     const s2 = Singleton2(s);
     expect(s2).not.equal(s);
-    expect(Singleton1.key(s2)).to.equal('ONE3');
-    expect(Singleton2.key(s2)).to.equal('TWO2');
+    expect(Singleton1.key(s2)).to.equal('o3');
+    expect(Singleton2.key(s2)).to.equal('o2');
 
     const t1 = Singleton1(t);
     expect(t1).not.equal(t);
-    expect(Singleton1.key(t1)).to.equal('ONE2');
-    expect(Singleton2.key(t1)).to.equal('TWO3');
+    expect(Singleton1.key(t1)).to.equal('o2');
+    expect(Singleton2.key(t1)).to.equal('o3');
 
     expect(Singleton1([s1])).to.equal(Singleton1([s]));
     expect(Singleton1([t1])).to.equal(Singleton1(t));

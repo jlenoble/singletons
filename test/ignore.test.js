@@ -45,7 +45,10 @@ describe('Testing Singleton ignore type', function () {
 
     const Singleton = SingletonFactory(Class, [{
       type: 'array',
-      sub: ['object', 'object', 'ignore', 'object'],
+      sub: ['object', 'object', 'ignore', {
+        type: 'object',
+        optional: true,
+      }],
     }]);
 
     const o1 = {id: 1};
