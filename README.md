@@ -9,7 +9,7 @@ Helps create and manage families of singletons based on customizable conditions
   * [Function `singleton(key)`](#function-singletonkey)
   * [Function `get(...args)`](#function-getargs)
   * [Preprocessing arguments](#preprocessing-arguments)
-  * [Postprocessing instance](#postprocessing-instance)
+  * [Postprocessing an instance](#postprocessing-an-instance)
   * [License](#license)
 
 
@@ -166,7 +166,7 @@ Singleton.get(Number); // undefined;
 
 ## Preprocessing arguments
 
-`SingletonFactory` can take a third argument, allowing to pass it a preprocessing function. This is useful when one has to handle inputs that don't match directly the provided hints, especially when passing already created singletons. On the one hand, passing a single singleton is handled by default (see [Special case: Singleton(singleton)](#special-syntax-singletonsingleton)). But on the other hand one may want to handle passing more than one singleton in conjunction with option 'rest: true'. This requires preprocessing, as shown in the example below.
+`SingletonFactory` can take a third argument, allowing to pass it a preprocessing function. This is useful when one has to handle inputs that don't match directly the provided hints, especially when passing already created singletons. On the one hand, passing a single singleton is handled by default (see [Special syntax: Singleton(singleton)](#special-syntax-singletonsingleton)). But on the other hand one may want to handle passing more than one singleton in conjunction with option 'rest: true'. This requires preprocessing, as shown in the example below.
 
 ```js
 import {SingletonFactory} from 'singletons';
@@ -213,7 +213,7 @@ t1 !== t3;
 t3 !== t4;
 ```
 
-## Postprocessing instance
+## Postprocessing an instance
 
 Sometimes, you want to update your singleton on invocation. This is not advised as it can have side effects, but for example if you ignore some arguments using the type 'ignore', then whatever you use for these arguments on invocation will be discarded from the second call onwards, since the singleton will just be recalled and the constructor not called again. That's probably unwanted behavior and the option postprocess gives an opportunity to correct that.
 
