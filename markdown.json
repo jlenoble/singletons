@@ -1,0 +1,7 @@
+{
+  "build": "README.md",
+  "files": ["docs/index.md"],
+  "tableOfContents": {
+    "heading": "# singletons\n\nHelps create and manage families of singletons based on customizable conditions"
+  }
+}
