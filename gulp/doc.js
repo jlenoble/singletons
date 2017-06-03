@@ -6,7 +6,7 @@ import wrap from 'gulp-wrap';
 
 const docConf = 'markdown.json';
 const examplesGlob = [
-  'docs/examples/**/*.test.js'
+  'docs/examples/**/*.test.js',
 ];
 const buildDir = 'build';
 
@@ -19,6 +19,7 @@ md.reset = function () {
 
 md.buildLink = function (title, _anchor) {
   const anchor = _anchor
+    .replace(/(\(|\))-*/g, '')
     .replace(/\W+/g, '-')
     .replace(/--+/g, '-')
     .replace(/^-/, '')
