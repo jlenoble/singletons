@@ -168,4 +168,112 @@ describe('Testing Singleton.get', function () {
     expect(s1).not.to.equal(s3);
     expect(s2).not.to.equal(s3);
   });
+
+  it(`Testing with SingletonFactory(Class, ['literal', ` +
+    `{type: 'object', rest: true}])`, function () {
+    class Class {
+      constructor () {}
+    }
+
+    const Singleton = SingletonFactory(Class, ['literal', {
+      type: 'object', rest: true,
+    }]);
+
+    const o1 = {id: 1};
+    const o2 = {id: 2};
+    const o3 = {id: 3};
+
+    const s1 = Singleton('foo', o1, o2, o3);
+    const s2 = Singleton('bar', o1, o2);
+
+    expect(s1).not.to.equal(s2);
+
+    expect(Singleton.get('foo', o1, o2, o3)).to.equal(s1);
+    expect(Singleton.get('bar', o1, o2)).to.equal(s2);
+    expect(Singleton('foo', o1, o2, o3)).to.equal(s1);
+    expect(Singleton('bar', o1, o2)).to.equal(s2);
+
+    expect(Singleton.get('bar', o2, o3)).to.be.undefined;
+
+    const s3 = Singleton('bar', o2, o3);
+    expect(Singleton.get('bar', o2, o3)).to.equal(s3);
+    expect(Singleton.get('bar', o3, o2)).to.be.undefined;
+    expect(Singleton.get('bar', o2, {id: 3})).to.be.undefined;
+    expect(Singleton('bar', o2, o3)).to.equal(s3);
+
+    expect(s1).not.to.equal(s3);
+    expect(s2).not.to.equal(s3);
+  });
+
+  it(`Testing with SingletonFactory(Class, ['literal', ` +
+    `{type: 'literal', rest: true}])`, function () {
+    class Class {
+      constructor () {}
+    }
+
+    const Singleton = SingletonFactory(Class, ['literal', {
+      type: 'literal', rest: true,
+    }]);
+
+    const o1 = {id: 1};
+    const o2 = {id: 2};
+    const o3 = {id: 3};
+
+    const s1 = Singleton('foo', o1, o2, o3);
+    const s2 = Singleton('bar', o1, o2);
+
+    expect(s1).not.to.equal(s2);
+
+    expect(Singleton.get('foo', o1, o2, o3)).to.equal(s1);
+    expect(Singleton.get('bar', o1, o2)).to.equal(s2);
+    expect(Singleton('foo', o1, o2, o3)).to.equal(s1);
+    expect(Singleton('bar', o1, o2)).to.equal(s2);
+
+    expect(Singleton.get('bar', o2, o3)).to.be.undefined;
+
+    const s3 = Singleton('bar', o2, o3);
+    expect(Singleton.get('bar', o2, o3)).to.equal(s3);
+    expect(Singleton.get('bar', o3, o2)).to.be.undefined;
+    expect(Singleton.get('bar', o2, {id: 3})).to.equal(s3);
+    expect(Singleton('bar', o2, o3)).to.equal(s3);
+
+    expect(s1).not.to.equal(s3);
+    expect(s2).not.to.equal(s3);
+  });
+
+  it(`Testing with SingletonFactory(Class, ['literal', ` +
+    `{type: 'ignore', rest: true}])`, function () {
+    class Class {
+      constructor () {}
+    }
+
+    const Singleton = SingletonFactory(Class, ['literal', {
+      type: 'ignore', rest: true,
+    }]);
+
+    const o1 = {id: 1};
+    const o2 = {id: 2};
+    const o3 = {id: 3};
+
+    const s1 = Singleton('foo', o1, o2, o3);
+    const s2 = Singleton('bar', o1, o2);
+
+    expect(s1).not.to.equal(s2);
+
+    expect(Singleton.get('foo', o1, o2, o3)).to.equal(s1);
+    expect(Singleton.get('bar', o1, o2)).to.equal(s2);
+    expect(Singleton('foo', o1, o2, o3)).to.equal(s1);
+    expect(Singleton('bar', o1, o2)).to.equal(s2);
+
+    expect(Singleton.get('bar', o2, o3)).to.equal(s2);
+
+    const s3 = Singleton('bar', o2, o3);
+    expect(Singleton.get('bar', o2, o3)).to.equal(s3);
+    expect(Singleton.get('bar', o3, o2)).to.equal(s3);
+    expect(Singleton.get('bar', o2, {id: 3})).to.equal(s3);
+    expect(Singleton('bar', o2, o3)).to.equal(s3);
+
+    expect(s1).not.to.equal(s3);
+    expect(s2).to.equal(s3);
+  });
 });
