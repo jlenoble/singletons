@@ -9,7 +9,7 @@ describe('Testing SingletonFactory with keyFunc', function () {
         const {args1, args2, title1, title2, keyFunc} = Args;
 
         it(`with args ${title1 ? title1 : args1} and ${title2 ?
-            title2 : args2}`, function () {
+          title2 : args2}`, function () {
           const Singleton = SingletonFactory(Type, keyFunc);
 
           const s1 = Singleton(...args1);
@@ -31,7 +31,7 @@ describe('Testing SingletonFactory with array of options', function () {
         const {args1, args2, title1, title2, keyFunc} = Args;
 
         it(`with args ${title1 ? title1 : args1} and ${title2 ?
-            title2 : args2}`, function () {
+          title2 : args2}`, function () {
           const Singleton = SingletonFactory(Type, keyFunc);
 
           const s1 = Singleton(...args1);
