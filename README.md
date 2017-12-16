@@ -343,8 +343,6 @@ paula.gender === 'female';
 john.age === 55;
 john.country === 'England';
 
-expect(new Contact('John', new
-
 new Contact(
   'John',
   new Gender('male'),
