@@ -10,6 +10,7 @@ Helps create and manage families of singletons based on customizable conditions
   * [Function `get(...args)`](#function-getargs)
   * [Preprocessing arguments](#preprocessing-arguments)
   * [Postprocessing an instance](#postprocessing-an-instance)
+  * [Passing custom arguments](#passing-custom-arguments)
   * [License](#license)
 
 
@@ -173,8 +174,8 @@ import {SingletonFactory} from 'singletons';
 
 class Class {
   constructor (...chunks) {
-    this.chunk = ['', ...chunks].reduce(
-    (str, chunk) => str + chunk);
+    this.chunk = chunks.reduce(
+      (str, chunk) => str + chunk, '');
   }
 }
 
@@ -249,6 +250,83 @@ annie === Inhabitant('Annie', 'Smith');
 annie.where === 'Los Angeles';
 annie === Inhabitant('Annie', 'Smith', {where: 'New York'});
 annie.where === 'New York';
+```
+
+## Passing custom arguments
+
+On top of [preprocessign](#preprocessign-arguments) or [postprocessing](#postprocessing-an-instance) as a whole, you may need even finer control, such as when your singletons have only loosely related structures.
+
+For example, a contact is definitely a singleton, is uniquely identified with a few parameters but may have many more associated. As ways to handle them blow up, you need dynamically to make your singletons understand how to construct themselves, or update themselves. The whole point of `singletons` is to be able to access your data through a finite set of unique, intuitive parameters, so neither maps with object keys, arrays of references, integer indexing will work, but on the other hand, you can't any more create your singletons straightforwardly with static, ordered parameters.
+
+So you may also pass `customArgs` as third argument. It is an array of 2-sized arrays. The first element is a custom class, the second a literal object with several possible options as functions to process the arguments of your custoù type:
+
+`convert`: Arguments of your custom type are replaced by the output of this function. If this option is not set, the custom arguments are not passed through as singleton parameters, but they are still considered for further processing by other custom functions.
+`reduce`: All arguments of your custom type are first reduced to one argument of the same type or another. It is then converted if possible, passed through or not, etc.
+`postprocess`: What to do with your custom types once your singleton is created or updated.
+
+```js
+import {SingletonFactory} from 'singletons';
+
+class Name {
+  constructor (name) {
+    this.name = name;
+  }
+}
+
+class Age {
+  constructor (age) {
+    this.age = age;
+  }
+}
+
+class Gender {
+  constructor (gender) {
+    this.gender = gender;
+  }
+}
+
+class Country {
+  constructor (country) {
+    this.country = country;
+  }
+}
+
+const Contact = SingletonFactory(Name, ['literal'], {
+  customArgs: [
+    [Age, {
+      postprocess ({age}) {
+        this.age = age;
+      },
+    }],
+    [Gender, {
+      postprocess ({gender}) {
+        this.gender = gender;
+      },
+    }],
+    [Country, {
+      postprocess ({country}) {
+        this.country = country;
+      },
+    }],
+  ],
+});
+
+const paul = new Contact('Paul');
+const paula = new Contact('Paula', new Gender('female'));
+const john = new Contact(new Country('England'), 'John', new Age(55));
+
+paul.name === 'Paul';
+paula.name === 'Paula';
+john.name === 'John';
+
+paula.gender === 'female';
+john.age === 55;
+john.country === 'England';
+
+new Contact('John', new Gender('male'), new Age(56),new Country('France')) === john;
+john.gender === 'male';
+john.age === 56;
+john.country === 'France';
 ```
 
 
