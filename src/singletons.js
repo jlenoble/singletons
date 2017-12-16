@@ -66,7 +66,7 @@ export const SingletonFactory = function (
           const type = Object.getPrototypeOf(arg).constructor;
           const {postprocess} = customArgs.get(type);
           if (postprocess) {
-            postprocess(instance, arg);
+            postprocess.call(instance, arg);
           }
         });
       }

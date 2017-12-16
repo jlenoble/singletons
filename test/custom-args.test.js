@@ -22,9 +22,11 @@ describe('Testing Singleton with custom arguments', function () {
     const Mister = SingletonFactory(Person, ['literal'], {
       customArgs: [
         [Attributes, {
-          convert: attrs => attrs.name,
-          postprocess: (instance, {attributes}) => {
-            Object.assign(instance, attributes);
+          convert (attrs) {
+            return attrs.name;
+          },
+          postprocess ({attributes}) {
+            Object.assign(this, attributes);
           },
         }],
       ],
