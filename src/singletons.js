@@ -26,22 +26,50 @@ export const SingletonFactory = function (
   const madeSingleton = (function (_Type, _keyfunc, _options) {
     const preprocess = _options.preprocess || idFunc;
     const postprocess = _options.postprocess || idFunc;
+    const customArgs = _options.customArgs && new Map(_options.customArgs);
 
     const instances = new Map();
     const keySymb = Symbol();
     const Singleton = function (..._args) {
-      const args = preprocess(_args);
+      let extractedArgs;
+      let convertedArgs;
+
+      if (customArgs) {
+        extractedArgs = _args.filter(arg =>
+          customArgs.has(Object.getPrototypeOf(arg).constructor));
+
+        convertedArgs = _args.map(arg => {
+          const type = Object.getPrototypeOf(arg).constructor;
+
+          if (customArgs.has(type)) {
+            const {convert} = customArgs.get(type);
+            return convert ? convert(arg) : null;
+          }
+
+          return arg;
+        }).filter(arg => arg !== null);
+      }
+
+      const args = preprocess(convertedArgs || _args);
 
       const key = Singleton.key(...args);
       let instance = instances.get(key);
 
-      if (instance) {
-        return postprocess(instance, args);
+      if (!instance) {
+        instance = new _Type(...args);
+        instance[keySymb] = key;
+        instances.set(key, instance);
       }
 
-      instance = new _Type(...args);
-      instance[keySymb] = key;
-      instances.set(key, instance);
+      if (customArgs) {
+        extractedArgs.forEach(arg => {
+          const type = Object.getPrototypeOf(arg).constructor;
+          const {postprocess} = customArgs.get(type);
+          if (postprocess) {
+            postprocess(instance, arg);
+          }
+        });
+      }
 
       return postprocess(instance, args);
     };
