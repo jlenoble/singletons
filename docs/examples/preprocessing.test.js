@@ -5,8 +5,8 @@ describe(`Testing README.md examples`, function () {
   it('Preprocessing arguments', function () {
     class Class {
       constructor (...chunks) {
-        this.chunk = ['', ...chunks].reduce(
-        (str, chunk) => str + chunk);
+        this.chunk = chunks.reduce(
+          (str, chunk) => str + chunk, '');
       }
     }
 
