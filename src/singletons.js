@@ -28,11 +28,17 @@ export const SingletonFactory = function (
     const postprocess = _options.postprocess || idFunc;
     const customArgs = _options.customArgs && new Map(_options.customArgs);
 
+    const reduceableTypes = customArgs ? new Set(Array.from(customArgs.keys())
+      .filter(key => {
+        return customArgs.get(key).reduce;
+      })) : null;
+
     const instances = new Map();
     const keySymb = Symbol();
     const Singleton = function (..._args) {
       let extractedArgs;
       let convertedArgs;
+      let unreduceableArgs;
 
       if (customArgs) {
         extractedArgs = _args.filter(arg =>
@@ -48,6 +54,11 @@ export const SingletonFactory = function (
 
           return arg;
         }).filter(arg => arg !== null);
+
+        unreduceableArgs = extractedArgs.filter(arg => {
+          const type = Object.getPrototypeOf(arg).constructor;
+          return !reduceableTypes.has(type);
+        });
       }
 
       const args = preprocess(convertedArgs || _args);
@@ -62,7 +73,13 @@ export const SingletonFactory = function (
       }
 
       if (customArgs) {
-        extractedArgs.forEach(arg => {
+        reduceableTypes.forEach(type => {
+          const {reduce, postprocess} = customArgs.get(type);
+          postprocess.call(instance, reduce(extractedArgs.filter(
+            arg => arg instanceof type)));
+        });
+
+        unreduceableArgs.forEach(arg => {
           const type = Object.getPrototypeOf(arg).constructor;
           const {postprocess} = customArgs.get(type);
           if (postprocess) {
