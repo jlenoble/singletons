@@ -6,6 +6,7 @@ describe(`Testing README.md examples`, function () {
     class Name {
       constructor (name) {
         this.name = name;
+        this.friends = new Set();
       }
     }
 
@@ -27,8 +28,19 @@ describe(`Testing README.md examples`, function () {
       }
     }
 
+    class Friend {
+      constructor (friend) {
+        this.friend = friend;
+      }
+    }
+
     const Contact = SingletonFactory(Name, ['literal'], {
       customArgs: [
+        [Name, {
+          convert ({name}) {
+            return name;
+          },
+        }],
         [Age, {
           postprocess ({age}) {
             this.age = age;
@@ -44,11 +56,21 @@ describe(`Testing README.md examples`, function () {
             this.country = country;
           },
         }],
+        [Friend, {
+          reduce (friends) {
+            return friends.reduce((array, {friend}) => {
+              return array.concat([friend]);
+            }, []);
+          },
+          postprocess (friends) {
+            friends.forEach(friend => this.friends.add(new Contact(friend)));
+          },
+        }],
       ],
     });
 
     const paul = new Contact('Paul');
-    const paula = new Contact('Paula', new Gender('female'));
+    const paula = new Contact(new Name('Paula'), new Gender('female'));
     const john = new Contact(new Country('England'), 'John', new Age(55));
 
     expect(paul.name).to.equal('Paul');
@@ -60,9 +82,14 @@ describe(`Testing README.md examples`, function () {
     expect(john.country).to.equal('England');
 
     expect(new Contact('John', new Gender('male'), new Age(56),
-      new Country('France'))).to.equal(john);
+      new Country('France'), new Friend('Paula'),
+      new Friend('Paul'))).to.equal(john);
     expect(john.gender).to.equal('male');
     expect(john.age).to.equal(56);
     expect(john.country).to.equal('France');
+
+    expect(john.friends.has(paula)).to.be.true;
+    expect(john.friends.has(paul)).to.be.true;
+    expect(john.friends.size).to.equal(2);
   });
 });

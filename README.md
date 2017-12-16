@@ -234,12 +234,10 @@ class Person {
 const Inhabitant = SingletonFactory(Person, [
   'literal', 'literal', 'ignore',
 ], {
-  postprocess: function (_instance, args) {
-    const instance = _instance;
+  postprocess: function (args) {
     if (args && args[2] && args[2].where) {
-      instance.where = args[2].where;
+      this.where = args[2].where;
     }
-    return instance;
   },
 });
 
@@ -270,6 +268,7 @@ import {SingletonFactory} from 'singletons';
 class Name {
   constructor (name) {
     this.name = name;
+    this.friends = new Set();
   }
 }
 
@@ -291,8 +290,19 @@ class Country {
   }
 }
 
+class Friend {
+  constructor (friend) {
+    this.friend = friend;
+  }
+}
+
 const Contact = SingletonFactory(Name, ['literal'], {
   customArgs: [
+    [Name, {
+      convert ({name}) {
+        return name;
+      },
+    }],
     [Age, {
       postprocess ({age}) {
         this.age = age;
@@ -308,11 +318,21 @@ const Contact = SingletonFactory(Name, ['literal'], {
         this.country = country;
       },
     }],
+    [Friend, {
+      reduce (friends) {
+        return friends.reduce((array, {friend}) => {
+          return array.concat([friend]);
+        }, []);
+      },
+      postprocess (friends) {
+        friends.forEach(friend => this.friends.add(new Contact(friend)));
+      },
+    }],
   ],
 });
 
 const paul = new Contact('Paul');
-const paula = new Contact('Paula', new Gender('female'));
+const paula = new Contact(new Name('Paula'), new Gender('female'));
 const john = new Contact(new Country('England'), 'John', new Age(55));
 
 paul.name === 'Paul';
@@ -323,10 +343,22 @@ paula.gender === 'female';
 john.age === 55;
 john.country === 'England';
 
-new Contact('John', new Gender('male'), new Age(56),new Country('France')) === john;
+new Contact(
+  'John',
+  new Gender('male'),
+  new Age(56),
+  new Country('France'),
+  new Friend('Paula'),
+  new Friend('Paul')
+) === john;
+
 john.gender === 'male';
 john.age === 56;
 john.country === 'France';
+
+john.friends.has(paula); // true;
+john.friends.has(paul); // true;
+john.friends.size === 2;
 ```
 
 
