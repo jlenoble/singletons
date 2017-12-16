@@ -71,7 +71,9 @@ export const SingletonFactory = function (
         });
       }
 
-      return postprocess(instance, args);
+      postprocess.call(instance, args);
+
+      return instance;
     };
 
     Singleton.key = (arg0, ...args) => {

@@ -14,12 +14,10 @@ describe(`Testing README.md examples`, function () {
     const Inhabitant = SingletonFactory(Person, [
       'literal', 'literal', 'ignore',
     ], {
-      postprocess: function (_instance, args) {
-        const instance = _instance;
+      postprocess: function (args) {
         if (args && args[2] && args[2].where) {
-          instance.where = args[2].where;
+          this.where = args[2].where;
         }
-        return instance;
       },
     });
 
