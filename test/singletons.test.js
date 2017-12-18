@@ -45,3 +45,30 @@ describe('Testing SingletonFactory with array of options', function () {
     });
   });
 });
+
+describe('Testing different Singletons concurrently', function () {
+  it(`Different singletons don't interfer`, function () {
+    class Name {
+      constructor (name) {
+        this.name = name;
+      }
+    }
+
+    const Singleton1 = SingletonFactory(Name, ['literal']);
+    const Singleton2 = SingletonFactory(Name, ['literal']);
+
+    const s1 = new Singleton1('Albert');
+    const s2 = new Singleton2('Albert');
+
+    expect(s1.name).to.equal(s2.name);
+    expect(s1).not.to.equal(s2);
+
+    expect(s1).to.equal(new Singleton1(s1));
+    expect(s2).to.equal(new Singleton2(s2));
+
+    expect(s1).not.to.equal(new Singleton2(s1));
+    expect(s1).not.to.equal(new Singleton1(s2));
+    expect(s2).not.to.equal(new Singleton1(s2));
+    expect(s2).not.to.equal(new Singleton2(s1));
+  });
+});

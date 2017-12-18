@@ -23,112 +23,109 @@ export const SingletonFactory = function (
     preprocess: idFunc,
     postprocess: idFunc,
   }) {
-  const madeSingleton = (function (_Type, _keyfunc, _options) {
-    const preprocess = _options.preprocess || idFunc;
-    const postprocess = _options.postprocess || idFunc;
-    const customArgs = _options.customArgs && new Map(_options.customArgs);
+  const keyfunc = getKeyFunc(defaultKeyfunc);
+  const preprocess = options.preprocess || idFunc;
+  const postprocess = options.postprocess || idFunc;
+  const customArgs = options.customArgs && new Map(options.customArgs);
 
-    const reduceableTypes = customArgs ? new Set(Array.from(customArgs.keys())
-      .filter(key => {
-        return customArgs.get(key).reduce;
-      })) : null;
-    const spreadableTypes = customArgs ? new Set(Array.from(customArgs.keys())
-      .filter(key => {
-        return customArgs.get(key).spread;
-      })) : null;
+  const reduceableTypes = customArgs ? new Set(Array.from(customArgs.keys())
+    .filter(key => {
+      return customArgs.get(key).reduce;
+    })) : null;
+  const spreadableTypes = customArgs ? new Set(Array.from(customArgs.keys())
+    .filter(key => {
+      return customArgs.get(key).spread;
+    })) : null;
 
-    const spreadArgs = (array, arg) => {
-      let newArray;
-      const type = Object.getPrototypeOf(arg).constructor;
+  const spreadArgs = (array, arg) => {
+    let newArray;
+    const type = Object.getPrototypeOf(arg).constructor;
 
-      if (spreadableTypes.has(type)) {
-        const {spread} = customArgs.get(type);
-        newArray = spread === true ?
-          Array.from(arg).reduce(spreadArgs, []) :
-          spread(arg).reduce(spreadArgs, []);
-      } else {
-        newArray = [arg];
-      }
+    if (spreadableTypes.has(type)) {
+      const {spread} = customArgs.get(type);
+      newArray = spread === true ?
+        Array.from(arg).reduce(spreadArgs, []) :
+        spread(arg).reduce(spreadArgs, []);
+    } else {
+      newArray = [arg];
+    }
 
-      return array.concat(newArray);
-    };
+    return array.concat(newArray);
+  };
 
-    const instances = new Map();
-    const keySymb = Symbol();
-    const Singleton = function (..._args) {
-      let extractedArgs;
-      let convertedArgs;
-      let unreduceableArgs;
+  const instances = new Map();
+  const keySymb = Symbol();
+  const Singleton = function (..._args) {
+    let extractedArgs;
+    let convertedArgs;
+    let unreduceableArgs;
 
-      if (customArgs) {
-        extractedArgs = _args.filter(arg =>
-          customArgs.has(Object.getPrototypeOf(arg).constructor));
+    if (customArgs) {
+      extractedArgs = _args.filter(arg =>
+        customArgs.has(Object.getPrototypeOf(arg).constructor));
 
-        convertedArgs = _args.reduce(spreadArgs, []).map(arg => {
-          const type = Object.getPrototypeOf(arg).constructor;
+      convertedArgs = _args.reduce(spreadArgs, []).map(arg => {
+        const type = Object.getPrototypeOf(arg).constructor;
 
-          if (customArgs.has(type)) {
-            const {convert} = customArgs.get(type);
-            return convert ? convert(arg) : null;
-          }
+        if (customArgs.has(type)) {
+          const {convert} = customArgs.get(type);
+          return convert ? convert(arg) : null;
+        }
 
-          return arg;
-        }).filter(arg => arg !== null);
+        return arg;
+      }).filter(arg => arg !== null);
 
-        unreduceableArgs = extractedArgs.filter(arg => {
-          const type = Object.getPrototypeOf(arg).constructor;
-          return !reduceableTypes.has(type);
-        });
-      }
+      unreduceableArgs = extractedArgs.filter(arg => {
+        const type = Object.getPrototypeOf(arg).constructor;
+        return !reduceableTypes.has(type);
+      });
+    }
 
-      const args = preprocess(convertedArgs || _args);
+    const args = preprocess(convertedArgs || _args);
 
-      const key = Singleton.key(...args);
-      let instance = instances.get(key);
+    const key = Singleton.key(...args);
+    let instance = instances.get(key);
 
-      if (!instance) {
-        instance = new _Type(...args);
-        instance[keySymb] = key;
-        instances.set(key, instance);
-      }
+    if (!instance) {
+      instance = new Type(...args);
+      instance[keySymb] = key;
+      instances.set(key, instance);
+    }
 
-      if (customArgs) {
-        reduceableTypes.forEach(type => {
-          const {reduce, postprocess} = customArgs.get(type);
-          postprocess.call(instance, reduce(extractedArgs.filter(
-            arg => arg instanceof type)));
-        });
+    if (customArgs) {
+      reduceableTypes.forEach(type => {
+        const {reduce, postprocess} = customArgs.get(type);
+        postprocess.call(instance, reduce(extractedArgs.filter(
+          arg => arg instanceof type)));
+      });
 
-        unreduceableArgs.forEach(arg => {
-          const type = Object.getPrototypeOf(arg).constructor;
-          const {postprocess} = customArgs.get(type) || {};
-          if (postprocess) {
-            postprocess.call(instance, arg);
-          }
-        });
-      }
+      unreduceableArgs.forEach(arg => {
+        const type = Object.getPrototypeOf(arg).constructor;
+        const {postprocess} = customArgs.get(type) || {};
+        if (postprocess) {
+          postprocess.call(instance, arg);
+        }
+      });
+    }
 
-      postprocess.call(instance, args);
+    postprocess.call(instance, args);
 
-      return instance;
-    };
+    return instance;
+  };
 
-    Singleton.key = (arg0, ...args) => {
-      if (arg0[keySymb]) {
-        return arg0[keySymb];
-      }
+  Singleton.key = (arg0, ...args) => {
+    if (arg0[keySymb]) {
+      return arg0[keySymb];
+    }
 
-      return _keyfunc(arg0, ...args);
-    };
-    Singleton.singleton = function (_key) {
-      return instances.get(_key);
-    };
-    Singleton.get = function (...args) {
-      return instances.get(Singleton.key(...args));
-    };
+    return keyfunc(arg0, ...args);
+  };
+  Singleton.singleton = function (_key) {
+    return instances.get(_key);
+  };
+  Singleton.get = function (...args) {
+    return instances.get(Singleton.key(...args));
+  };
 
-    return Singleton;
-  }(Type, getKeyFunc(defaultKeyfunc), options));
-
-  return madeSingleton;
+  return Singleton;
 };
