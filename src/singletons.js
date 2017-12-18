@@ -45,7 +45,8 @@ export const SingletonFactory = function (
   // one arg into several
   const spreadableTypes = customArgs ? new Set(Array.from(customArgs.keys())
     .filter(key => {
-      return customArgs.get(key).spread;
+      const customArg = customArgs.get(key);
+      return customArg.spread || customArg.shallowSpread;
     })) : null;
 
   // Helper function to split registered containerlike args into the args
@@ -55,10 +56,14 @@ export const SingletonFactory = function (
     const type = Object.getPrototypeOf(arg).constructor;
 
     if (spreadableTypes.has(type)) {
-      const {spread} = customArgs.get(type);
+      const {spread, shallowSpread} = customArgs.get(type);
       newArray = spread === true ?
         Array.from(arg).reduce(spreadArgs, []) :
-        spread(arg).reduce(spreadArgs, []);
+        spread !== undefined ?
+          spread(arg).reduce(spreadArgs, []) :
+          shallowSpread === true ?
+            Array.from(arg) :
+            shallowSpread(arg);
     } else {
       newArray = [arg];
     }
@@ -93,8 +98,8 @@ export const SingletonFactory = function (
         const type = Object.getPrototypeOf(arg).constructor;
 
         if (customArgs.has(type)) {
-          const {convert} = customArgs.get(type);
-          return convert ? convert(arg) : null;
+          const {convert, spread, shallowSpread} = customArgs.get(type);
+          return convert ? convert(arg) : spread || shallowSpread ? arg : null;
         }
 
         return arg;
