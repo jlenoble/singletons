@@ -32,6 +32,26 @@ export const SingletonFactory = function (
       .filter(key => {
         return customArgs.get(key).reduce;
       })) : null;
+    const spreadableTypes = customArgs ? new Set(Array.from(customArgs.keys())
+      .filter(key => {
+        return customArgs.get(key).spread;
+      })) : null;
+
+    const spreadArgs = (array, arg) => {
+      let newArray;
+      const type = Object.getPrototypeOf(arg).constructor;
+
+      if (spreadableTypes.has(type)) {
+        const {spread} = customArgs.get(type);
+        newArray = spread === true ?
+          Array.from(arg).reduce(spreadArgs, []) :
+          spread(arg).reduce(spreadArgs, []);
+      } else {
+        newArray = [arg];
+      }
+
+      return array.concat(newArray);
+    };
 
     const instances = new Map();
     const keySymb = Symbol();
@@ -44,7 +64,7 @@ export const SingletonFactory = function (
         extractedArgs = _args.filter(arg =>
           customArgs.has(Object.getPrototypeOf(arg).constructor));
 
-        convertedArgs = _args.map(arg => {
+        convertedArgs = _args.reduce(spreadArgs, []).map(arg => {
           const type = Object.getPrototypeOf(arg).constructor;
 
           if (customArgs.has(type)) {
@@ -81,7 +101,7 @@ export const SingletonFactory = function (
 
         unreduceableArgs.forEach(arg => {
           const type = Object.getPrototypeOf(arg).constructor;
-          const {postprocess} = customArgs.get(type);
+          const {postprocess} = customArgs.get(type) || {};
           if (postprocess) {
             postprocess.call(instance, arg);
           }
