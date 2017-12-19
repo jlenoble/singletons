@@ -264,7 +264,7 @@ So you may also pass `customArgs` as third argument. It is an array of 2-sized a
 * `shallowSpread`: Arguments of your custom type are converted to lists of regular initializing args that are spread in place in the sequence of all init args. Just the init args are affected. You won't enter an infinite loop if there are cyclical references.
 * `postprocess`: What to do with your custom or reduced types once your singleton is created or updated.
 
-If you need to spread arguments deeply but they cross-reference, you must use [`preprocess`](#preprocessing-arguments) instead of `customArgs:spread` and you must work out some circonvoluted logic on your own. Good luck!
+If you need to spread arguments deeply but they cross-reference, you must use [`preprocess`](#preprocessing-arguments) instead of `customArgs:spread` and you must work out some circumvoluted logic on your own. Good luck!
 
 ```js
 import {SingletonFactory} from 'singletons';
