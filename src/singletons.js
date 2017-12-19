@@ -185,5 +185,14 @@ export const SingletonFactory = function (
     return instances.get(Singleton.key(...args));
   };
 
+  Singleton.looseKey = (..._args) => {
+    const {args} = preprocessAll(_args);
+    return Singleton.key(...args);
+  };
+
+  Singleton.looseGet = function (...args) {
+    return instances.get(Singleton.looseKey(...args));
+  };
+
   return Singleton;
 };
