@@ -258,9 +258,13 @@ For example, a contact is definitely a singleton, is uniquely identified with a 
 
 So you may also pass `customArgs` as third argument. It is an array of 2-sized arrays. The first element is a custom class, the second a literal object with several possible options as functions to process the arguments of your custom type:
 
-* `convert`: Arguments of your custom type are replaced by the output of this function. If this option is not set, the custom arguments are not passed through as singleton parameters, but they are still considered for further processing by other custom functions.
-* `reduce`: All arguments of your custom type are first reduced to one argument of the same type or another. It is then converted if possible, passed through or not, etc.
-* `postprocess`: What to do with your custom types once your singleton is created or updated.
+* `convert`: Arguments of your custom type are replaced by the output of this function. If this option is not set, the custom arguments are not passed through as singleton parameters, but they are still considered for postprocessing.
+* `reduce`: All arguments of your custom type are reduced to one argument of the same type or another before postprocessing, but after all other operations. If you need to reduce first, either use `[`preprocess`](#preprocessing-arguments)`, or reduce them outside and pass only the result of the reduction (of a regular type or of a new custom type created just for the occasion!).
+* `spread`: Arguments of your custom type are converted to lists of regular initializing args that are spread in place in the sequence of all init args, recursively. Beware of cyclical references. You may prefer to use `shallowSpread` instead.
+* `shallowSpread`: Arguments of your custom type are converted to lists of regular initializing args that are spread in place in the sequence of all init args. Just the init args are affected. You won't enter an infinite loop if there are cyclical references.
+* `postprocess`: What to do with your custom or reduced types once your singleton is created or updated.
+
+If you need to spread arguments deeply but they cross-reference, you must use [`preprocess`](#preprocessing-arguments) instead of `customArgs:spread` and you must work out some circonvoluted logic on your own. Good luck!
 
 ```js
 import {SingletonFactory} from 'singletons';
@@ -320,9 +324,7 @@ const Contact = SingletonFactory(Name, ['literal'], {
     }],
     [Friend, {
       reduce (friends) {
-        return friends.reduce((array, {friend}) => {
-          return array.concat([friend]);
-        }, []);
+        return friends.map(friend => friend.friend);
       },
       postprocess (friends) {
         friends.forEach(friend => this.friends.add(new Contact(friend)));
@@ -343,15 +345,9 @@ paula.gender === 'female';
 john.age === 55;
 john.country === 'England';
 
-new Contact(
-  'John',
-  new Gender('male'),
-  new Age(56),
-  new Country('France'),
-  new Friend('Paula'),
-  new Friend('Paul')
-) === john;
-
+expect(new Contact('John', new Gender('male'), new Age(56),
+  new Country('France'), new Friend('Paula'),
+  new Friend('Paul'))).to.equal(john);
 john.gender === 'male';
 john.age === 56;
 john.country === 'France';
@@ -359,6 +355,47 @@ john.country === 'France';
 john.friends.has(paula); // true;
 john.friends.has(paul); // true;
 john.friends.size === 2;
+
+const Friends = SingletonFactory(Array, [{
+  type: 'literal',
+  rest: true,
+}], {
+  customArgs: [
+    [Name, {
+      spread (contact) {
+        return Array.from(contact.friends || []).map(
+          contact => new Friend(contact.name));
+      },
+    }],
+    [Friend, {
+      convert (friend) {
+        return friend.friend;
+      },
+    }],
+  ],
+});
+
+const friends = new Friends(john);
+expect(friends).to.eql(['Paula', 'Paul']);
+
+const Friends2 = SingletonFactory(Array, [{
+  type: 'literal',
+  rest: true,
+}], {
+  customArgs: [
+    [Name, {
+      shallowSpread (contact) {
+        return Array.from(contact.friends || []);
+      },
+      convert (contact) {
+        return contact.name;
+      },
+    }],
+  ],
+});
+
+const friends2 = new Friends2(john);
+expect(friends2).to.eql(['Paula', 'Paul']);
 ```
 
 
