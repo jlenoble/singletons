@@ -4,6 +4,7 @@
 #include "docs/functions.md"
 #include "docs/preprocessing.md"
 #include "docs/postprocessing.md"
+#include "docs/spreadable-singletons.md"
 #include "docs/custom-arguments.md"
 
 ## License !heading
