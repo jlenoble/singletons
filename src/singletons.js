@@ -82,15 +82,8 @@ export const SingletonFactory = function (
     return array.concat(newArray);
   };
 
-  // All singletons from this Singleton type ever created
-  const instances = new Map();
-
-  // The unique field marking every instance of type Type created by the
-  // following Singleton
-  const keySymb = Symbol();
-
-  // The custom Singleton factory out of this Singleton factory
-  const Singleton = function (..._args) {
+  // Helper function to encapsulate all preprocessing
+  const preprocessAll = _args => {
     let extractedArgs;
     let convertedArgs;
     let unreduceableArgs;
@@ -127,6 +120,20 @@ export const SingletonFactory = function (
     // After this, all args have the correct types and order to instanciate or
     // recall a unique instance of type Type
     const args = preprocess(convertedArgs || _args);
+
+    return {args, extractedArgs, unreduceableArgs};
+  };
+
+  // All singletons from this Singleton type ever created
+  const instances = new Map();
+
+  // The unique field marking every instance of type Type created by the
+  // following Singleton
+  const keySymb = Symbol();
+
+  // The custom Singleton factory out of this Singleton factory
+  const Singleton = function (..._args) {
+    const {args, extractedArgs, unreduceableArgs} = preprocessAll(_args);
 
     const key = Singleton.key(...args);
     let instance = instances.get(key);
