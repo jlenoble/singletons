@@ -58,9 +58,7 @@ describe(`Testing README.md examples`, function () {
         }],
         [Friend, {
           reduce (friends) {
-            return friends.reduce((array, {friend}) => {
-              return array.concat([friend]);
-            }, []);
+            return friends.map(friend => friend.friend);
           },
           postprocess (friends) {
             friends.forEach(friend => this.friends.add(new Contact(friend)));
@@ -91,5 +89,46 @@ describe(`Testing README.md examples`, function () {
     expect(john.friends.has(paula)).to.be.true;
     expect(john.friends.has(paul)).to.be.true;
     expect(john.friends.size).to.equal(2);
+
+    const Friends = SingletonFactory(Array, [{
+      type: 'literal',
+      rest: true,
+    }], {
+      customArgs: [
+        [Name, {
+          spread (contact) {
+            return Array.from(contact.friends || []).map(
+              contact => new Friend(contact.name));
+          },
+        }],
+        [Friend, {
+          convert (friend) {
+            return friend.friend;
+          },
+        }],
+      ],
+    });
+
+    const friends = new Friends(john);
+    expect(friends).to.eql(['Paula', 'Paul']);
+
+    const Friends2 = SingletonFactory(Array, [{
+      type: 'literal',
+      rest: true,
+    }], {
+      customArgs: [
+        [Name, {
+          shallowSpread (contact) {
+            return Array.from(contact.friends || []);
+          },
+          convert (contact) {
+            return contact.name;
+          },
+        }],
+      ],
+    });
+
+    const friends2 = new Friends2(john);
+    expect(friends2).to.eql(['Paula', 'Paul']);
   });
 });

@@ -8,6 +8,10 @@ So you may also pass `customArgs` as third argument. It is an array of 2-sized a
 
 * `convert`: Arguments of your custom type are replaced by the output of this function. If this option is not set, the custom arguments are not passed through as singleton parameters, but they are still considered for further processing by other custom functions.
 * `reduce`: All arguments of your custom type are first reduced to one argument of the same type or another. It is then converted if possible, passed through or not, etc.
-* `postprocess`: What to do with your custom types once your singleton is created or updated.
+* `spread`: Arguments of your custom type are converted to lists of regular initializing args that are spread in place in the sequence of all init args, recursively. Beware of cyclical references. You may prefer to use `shallowSpread` instead.
+* `shallowSpread`: Arguments of your custom type are converted to lists of regular initializing args that are spread in place in the sequence of all init args. Just the init args are affected. You won't enter an infinite loop if there are cyclical references.
+* `postprocess`: What to do with your custom or reduced types once your singleton is created or updated.
+
+If you need to spread arguments deeply but they cross-reference, you must use [`preprocess`](#preprocessing-arguments) instead of `customArgs:spread` and you must work out some circonvoluted logic on your own. Good luck!
 
 #include "build/docs/examples/custom-arguments.test.md"
