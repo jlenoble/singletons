@@ -10,6 +10,7 @@ Helps create and manage families of singletons based on customizable conditions
   * [Function `get(...args)`](#function-getargs)
   * [Preprocessing arguments](#preprocessing-arguments)
   * [Postprocessing an instance](#postprocessing-an-instance)
+  * [Spreadable singletons](#spreadable-singletons)
   * [Passing custom arguments](#passing-custom-arguments)
   * [License](#license)
 
@@ -248,6 +249,69 @@ annie === Inhabitant('Annie', 'Smith');
 annie.where === 'Los Angeles';
 annie === Inhabitant('Annie', 'Smith', {where: 'New York'});
 annie.where === 'New York';
+```
+
+## Spreadable singletons
+
+Some singletons are wrappers around collections. You may want to create new ones by merging two or more. You can do it by using the `customArgs:spread` or `customArgs:shallowSpread` options (see [Passing custom arguments](#passing-custom-arguments)) in conjunction with the type you used as first argument in the factory.
+
+But when that type is not accessible (that is you cannot create the Singleton function and are only allowed to configure it through an interface that hides the type from you), you can still have the merging functionality by using options `spread` and `shallowSpread` (provided the interface doesn't further filter the options you pass to SingletonFactory).
+
+```js
+import {SingletonFactory} from 'singletons';
+
+function hidingFunction (options) {
+  class Person {
+    constructor (name) {
+      this.name = name;
+    }
+  }
+
+  class Persons {
+    constructor (...names) {
+      this.persons = names.map(name => new Person(name));
+    }
+
+    getNames () {
+      return this.persons.map(person => person.name);
+    }
+  }
+
+  return SingletonFactory(Persons, [{
+    type: 'literal',
+    rest: true,
+  }], Object.assign({
+    customArgs: [
+      [Person, {
+        convert (person) {
+          return person.name;
+        },
+      }],
+
+      [Array, {
+        spread: true,
+      }],
+    ],
+  }, options));
+}
+
+const Crowd = hidingFunction({
+  spread (crowd) {
+    return crowd.persons;
+  },
+});
+
+const c1 = new Crowd('Nancy');
+const c2 = new Crowd('Harry', 'Johnny', 'Sally');
+const c3 = ['Peter', 'Paul', 'Pauline', 'Louis'];
+
+const crowd = new Crowd('Sam', c1, c2, c3);
+
+expect(crowd.getNames()).to.eql([
+  'Sam', 'Nancy',
+  'Harry', 'Johnny', 'Sally',
+  'Peter', 'Paul', 'Pauline', 'Louis',
+]);
 ```
 
 ## Passing custom arguments
