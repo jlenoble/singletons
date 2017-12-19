@@ -8,6 +8,8 @@ Helps create and manage families of singletons based on customizable conditions
   * [Function `key(...args)`](#function-keyargs)
   * [Function `singleton(key)`](#function-singletonkey)
   * [Function `get(...args)`](#function-getargs)
+  * [Function `looseKey(...args)`](#function-loosekeyargs)
+  * [Function `looseGet(...args)`](#function-loosegetargs)
   * [Preprocessing arguments](#preprocessing-arguments)
   * [Postprocessing an instance](#postprocessing-an-instance)
   * [Spreadable singletons](#spreadable-singletons)
@@ -164,6 +166,81 @@ const s1 = Singleton(console);
 
 Singleton.get(console) === s1;
 Singleton.get(Number); // undefined;
+```
+
+## Function `looseKey(...args)`
+
+Whereas `key` requires an exact match, `looseKey` will preprocess its arguments with the same helpers you provided for `Singleton`, then only it will return the generated key.
+
+Never use this function within one of your preprocessing helpers, as you would enter an infinite loop resulting in a maximum call stack size error.
+
+```js
+import {SingletonFactory} from 'singletons';
+import sig from 'sig';
+
+class Class {
+  constructor (str) {
+    this.str = str;
+  }
+};
+
+const Singleton = SingletonFactory(
+  Class,
+  ['literal'],
+  {
+    customArgs: [
+      [String, {
+        convert (arg) {
+          return arg.match(/!$/) ? arg : arg + '!';
+        },
+      }],
+    ],
+  }
+);
+
+Singleton.key('hello') === sig('hello');
+Singleton.key('hello!') === sig('hello!');
+
+Singleton.looseKey('hello') === sig('hello!');
+Singleton.looseKey('hello!') === sig('hello!');
+```
+
+## Function `looseGet(...args)`
+
+Whereas `get` requires an exact match, `looseGet` will preprocess its arguments with the same helpers you provided for `Singleton`, then only it will return the found singleton or nothing if the preprocessed args still match nothing.
+
+Never use this function within one of your preprocessing helpers, as you would enter an infinite loop resulting in a maximum call stack size error.
+
+```js
+import {SingletonFactory} from 'singletons';
+
+class Class {
+  constructor (str) {
+    this.str = str;
+  }
+};
+
+const Singleton = SingletonFactory(
+  Class,
+  ['literal'],
+  {
+    customArgs: [
+      [String, {
+        convert (arg) {
+          return arg.match(/!$/) ? arg : arg + '!';
+        },
+      }],
+    ],
+  }
+);
+const s1 = Singleton('hello');
+
+Singleton.get('hello'); // undefined;
+Singleton.get('hello!') === s1;
+
+Singleton.looseGet('hello') === s1;
+Singleton.looseGet('hello!') === s1;
+Singleton.looseGet('hello!!'); // undefined;
 ```
 
 ## Preprocessing arguments
