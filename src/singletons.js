@@ -19,10 +19,7 @@ keys from arguments, or an array of hints`);
 const idFunc = args => args;
 
 export const SingletonFactory = function (
-  Type, defaultKeyfunc = obj => obj.toString(), options = {
-    preprocess: idFunc,
-    postprocess: idFunc,
-  }) {
+  Type, defaultKeyfunc = obj => obj.toString(), options = {}) {
   const keyfunc = getKeyFunc(defaultKeyfunc);
 
   // Wholesale preprocessing (before everything except direct type conversion)
@@ -31,8 +28,21 @@ export const SingletonFactory = function (
   // Wholesale postprocessing (last chance to update the current singleton)
   const postprocess = options.postprocess || idFunc;
 
+  // If defined then this Type itself is spreadable (the singleton is some
+  // kind of container)
+  const spread = options.spread;
+  const shallowSpread = options.shallowSpread;
+
   // If not undefined, some args will require special processing
-  const customArgs = options.customArgs && new Map(options.customArgs);
+  const customArgs = options.customArgs && new Map(options.customArgs) ||
+    spread || shallowSpread && new Map([Type, {spread, shallowSpread}]);
+
+  if (options.customArgs && (spread || shallowSpread)) {
+    // If both are true, then customArgs already exists but is still missing
+    // this Type as special arg (or not! But then it's a user mistake that
+    // yields here a silent override)
+    customArgs.set(Type, {spread, shallowSpread});
+  }
 
   // When special handling is activated, reduceableTypes will help merge
   // several args into one
@@ -43,11 +53,12 @@ export const SingletonFactory = function (
 
   // When special handling is activated, spreadableTypes will help split
   // one arg into several
-  const spreadableTypes = customArgs ? new Set(Array.from(customArgs.keys())
-    .filter(key => {
-      const customArg = customArgs.get(key);
-      return customArg.spread || customArg.shallowSpread;
-    })) : null;
+  const spreadableTypes = customArgs ?
+    new Set(Array.from(customArgs.keys())
+      .filter(key => {
+        const customArg = customArgs.get(key);
+        return customArg.spread || customArg.shallowSpread;
+      })) : null;
 
   // Helper function to split registered containerlike args into the args
   // they contain
@@ -153,7 +164,7 @@ export const SingletonFactory = function (
   };
 
   Singleton.key = (arg0, ...args) => {
-    if (arg0[keySymb]) {
+    if (arg0[keySymb] && !args.length) {
       return arg0[keySymb];
     }
     return keyfunc(arg0, ...args);
